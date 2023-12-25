@@ -276,19 +276,19 @@
 
 							<div class="social-media-icon">
 								<ul class="global-list d-flex">
-									<!-- <li class="fb-icon"
+									<li class="fb-icon"
 										><a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-facebook"></span></a
 									></li>
 									<li class="tw-icon"
 										><a target="_blank" :href="'https://twitter.com/intent/tweet?text=' + productDetails.product_name + '&url=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-twitter"></span></a
-									></li> -->
-									<!-- <li class="ld-icon"
+									></li>
+									<li class="ld-icon"
 										><a target="_blank" :href="'https://www.linkedin.com/sharing/share-offsite?mini=true&url=' + getUrl('product/' + productDetails.slug) + '&title=' + productDetails.product_name + '&summary=Extra+linkedin+summary+can+be+passed+here'"
 											><span class="mdi mdi-linkedin"></span></a
-									></li> -->
-									<!-- <li class="wh-icon"
+									></li>
+									<li class="wh-icon"
 										><a target="_blank" :href="'https://wa.me/?text=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-whatsapp"></span></a
-									></li> -->
+									></li>
 								</ul>
 							</div>
 						</div>
