@@ -1,0 +1,42 @@
+[25-Dec-2023 13:05:54 UTC] PHP Warning:  require(/home/chamovac/public_html/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/chamovac/public_html/public/index.php on line 39
+[25-Dec-2023 13:05:54 UTC] PHP Warning:  require(/home/chamovac/public_html/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/chamovac/public_html/public/index.php on line 39
+[25-Dec-2023 13:05:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/chamovac/public_html/public/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/chamovac/public_html/public/index.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/chamovac/public_html/public/index.php on line 39
+[25-Dec-2023 13:09:52 UTC] PHP Warning:  require(/home/chamovac/public_html/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/chamovac/public_html/public/index.php on line 39
+[25-Dec-2023 13:09:52 UTC] PHP Warning:  require(/home/chamovac/public_html/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/chamovac/public_html/public/index.php on line 39
+[25-Dec-2023 13:09:52 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/chamovac/public_html/public/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/chamovac/public_html/public/index.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/chamovac/public_html/public/index.php on line 39
+[25-Dec-2023 13:10:06 UTC] PHP Warning:  require_once(/home/chamovac/public_html/vendor/composer/autoload_real.php): Failed to open stream: No such file or directory in /home/chamovac/public_html/vendor/autoload.php on line 23
+[25-Dec-2023 13:10:06 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/chamovac/public_html/vendor/composer/autoload_real.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/chamovac/public_html/vendor/autoload.php:23
+Stack trace:
+#0 /home/chamovac/public_html/public/index.php(39): require()
+#1 {main}
+  thrown in /home/chamovac/public_html/vendor/autoload.php on line 23
+[25-Dec-2023 19:29:09 Asia/Dhaka] PHP Fatal error:  Uncaught InvalidArgumentException: Please provide a valid cache path. in /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/Compilers/Compiler.php:36
+Stack trace:
+#0 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/ViewServiceProvider.php(88): Illuminate\View\Compilers\Compiler->__construct(Object(Illuminate\Filesystem\Filesystem), false)
+#1 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(873): Illuminate\View\ViewServiceProvider->Illuminate\View\{closure}(Object(Illuminate\Foundation\Application), Array)
+#2 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build(Object(Closure))
+#3 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('blade.compiler', Array, true)
+#4 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(694): Illuminate\Foundation\Application->resolve('blade.compiler', Array)
+#5 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(836): Illuminate\Container\Container->make('blade.compiler', Array)
+#6 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(1419): Illuminate\Foundation\Application->make('blade.compiler')
+#7 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/ViewServiceProvider.php(150): Illuminate\Container\Container->offsetGet('blade.compiler')
+#8 [internal function]: Illuminate\View\ViewServiceProvider->Illuminate\View\{closure}()
+#9 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/EngineResolver.php(55): call_user_func(Object(Closure))
+#10 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/Factory.php(310): Illuminate\View\Engines\EngineResolver->resolve('blade')
+#11 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/Factory.php(274): Illuminate\View\Factory->getEngineFromPath('/home/chamovac/...')
+#12 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/Factory.php(146): Illuminate\View\Factory->viewInstance('errors::500', '/home/chamovac/...', Array)
+#13 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Routing/ResponseFactory.php(85): Illuminate\View\Factory->make('errors::500', Array)
+#14 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(585): Illuminate\Routing\ResponseFactory->view('errors::500', Array, 500, Array)
+#15 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(490): Illuminate\Foundation\Exceptions\Handler->renderHttpException(Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#16 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(356): Illuminate\Foundation\Exceptions\Handler->prepareResponse(Object(Illuminate\Http\Request), Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#17 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(196): Illuminate\Foundation\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(InvalidArgumentException))
+#18 /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(173): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse(Object(InvalidArgumentException))
+#19 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleException(Object(InvalidArgumentException))
+#20 {main}
+  thrown in /home/chamovac/public_html/vendor/laravel/framework/src/Illuminate/View/Compilers/Compiler.php on line 36
