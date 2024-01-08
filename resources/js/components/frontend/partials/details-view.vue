@@ -276,10 +276,10 @@
 
 							<div class="social-media-icon">
 								<ul class="global-list d-flex alx">
-									<!--<li class="fb-icon"-->
-									<!--	><a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-facebook"></span></a-->
-									<!--></li>-->
-									<!-- <li class="tw-icon"
+									<li class="fb-icon"
+										><a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-facebook"></span></a
+									></li>
+								 <li class="tw-icon"
 										><a target="_blank" :href="'https://twitter.com/intent/tweet?text=' + productDetails.product_name + '&url=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-twitter"></span></a
 									></li>
 									<li class="ld-icon"
@@ -288,7 +288,7 @@
 									></li>
 									<li class="wh-icon"
 										><a target="_blank" :href="'https://wa.me/?text=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-whatsapp"></span></a
-									></li> -->
+									></li> 
 								</ul>
 							</div>
 						</div>
