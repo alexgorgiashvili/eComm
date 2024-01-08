@@ -275,10 +275,10 @@
 							</div>
 
 							<div class="social-media-icon">
-								<ul class="global-list d-flex">
-									<li class="fb-icon"
-										><a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-facebook"></span></a
-									></li>
+								<ul class="global-list d-flex alx">
+									<!--<li class="fb-icon"-->
+									<!--	><a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-facebook"></span></a-->
+									<!--></li>-->
 									<!-- <li class="tw-icon"
 										><a target="_blank" :href="'https://twitter.com/intent/tweet?text=' + productDetails.product_name + '&url=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-twitter"></span></a
 									></li>
