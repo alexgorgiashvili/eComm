@@ -1,6 +1,6 @@
 <template>
     <div class="col-lg-3" v-if="authUser">
-        <div class="profile-details position-relative">
+        <!-- <div class="profile-details position-relative">
             <div class="profile-thumb">
                 <img :src="authUser.profile_image" :alt="authUser.full_name" class="img-fluid">
             </div>
@@ -9,7 +9,7 @@
             <router-link class="be_seller base" :to="{ name : 'migrate.seller' }"  v-if="!addons.includes('ramdhani') && settings.seller_system == 1">
                 {{ lang.be_a_seller }} <span class="mdi mdi-name mdi-store-outline"></span>
             </router-link>
-        </div>
+        </div> -->
         <div class="sidebar-menu">
             <ul class="global-list">
                 <li :class="{active: current === 'dashboard'}">

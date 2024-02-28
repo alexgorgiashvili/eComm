@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Filesystem\Filesystem;
@@ -127,8 +128,10 @@ class LanguageController extends Controller
            
             $languages      = $this->translation->allLanguages();
             $groups         = $this->translation->getGroupsFor(config('app.locale'))->merge('single');
+            // dd($request->all());
             $translations   = $this->translation->filterTranslationsFor($language, $request->get('filter'));
-            
+
+            // dd($translations);
             if ($request->has('group') && $request->get('group')) {
                 if ($request->get('group') === 'single') {
                     $translations = $translations->get('single');
@@ -143,6 +146,8 @@ class LanguageController extends Controller
 
             return view('admin.settings.language.translation.index', compact('language', 'languages', 'groups', 'translations'));
         } catch (\Exception $e){
+            Log::error($e->getMessage());
+
             Toastr::error($e->getMessage());
             return back();
         }

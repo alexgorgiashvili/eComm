@@ -13,6 +13,8 @@ interface MediaInterface
     public function paginate($request, $limit);
 
     public function store($request, $type);
+    
+    public function storeHttp($request);
 
     public function delete($request);
 }

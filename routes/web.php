@@ -259,6 +259,7 @@ Route::middleware(['XSS', 'isInstalled'])->group(function () {
     Route::get('/seller/coupons/{id}', [CouponController::class, 'coupons'])->name('front.seller.coupons');
     Route::match(['post', 'get'], 'get/ssl-response', [PaymentController::class, 'sslResponse'])->name('ssl.response');
     Route::get('get/country-list', [AddressController::class, 'countries'])->name('get.country');
+    Route::get('get/courier-country-list', [AddressController::class, 'courierCountries'])->name('get.courier.country');
     Route::get('set/text-direction/{dir}', [HomeController::class, 'textDirection'])->name('set.text-direction');
     Route::post('search/product', [ProductController::class, 'searchProduct'])->name('search.product');
     Route::get('summernote/clean', [HomeController::class, 'summernoteClean'])->name('summernote.clean');

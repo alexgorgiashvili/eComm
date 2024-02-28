@@ -45,13 +45,13 @@
 
                   <span class="validation_error" v-if="errors.phone">{{ errors.phone[0] }}</span>
                 </div>
-                <div v-if="addons.includes('otp_system')" class="form-group text-end mb-3">
+                <!-- <div v-if="addons.includes('otp_system')" class="form-group text-end mb-3">
                   <a href="javascript:void(0)" class="btn sign-in-option"
                      @click="loginOptions(optionTo)">{{
                       optionTo == 'email' ? lang.use_email_instead : lang.use_phone_instead
                     }}</a>
-                </div>
-                <div class="form-group" v-if="optionTo == 'phone'"
+                </div> -->
+                <!-- <div class="form-group" v-if="optionTo == 'phone'"
                      :class="{ 'mt-4' : !addons.includes('otp_system') }">
                   <span class="mdi mdi-name mdi-lock-outline"></span>
                   <input type="password" v-model="form.password" class="form-control"
@@ -66,7 +66,7 @@
                          :class="{ 'error_border' : errors.password_confirmation }" :placeholder="lang.password_confirmation"/>
                 </div>
                 <span class="validation_error"
-                      v-if="errors.password_confirmation && optionTo == 'phone'">{{ errors.password_confirmation[0] }}</span>
+                      v-if="errors.password_confirmation && optionTo == 'phone'">{{ errors.password_confirmation[0] }}</span> -->
               </div>
               <div class="form-group mt-4" v-if="addons.includes('otp_system') && otp && !settings.disable_otp">
                 <span class="mdi mdi-name mdi-lock-outline"></span>
@@ -81,21 +81,23 @@
               </div>
 
               <gdpr_page ref="customer_agreement" :agreements="settings.customer_agreement"></gdpr_page>
-
               <button type="submit" class="btn" v-if="otp && !loading"
                       :class="{ 'disable_btn' : form.otp.length != 5 && !settings.disable_otp }">{{ lang.sign_up }}
               </button>
 
-              <button type="submit" class="btn" v-else-if="optionTo == 'phone' && !loading">
+              <!-- <button type="submit" class="btn" v-if="optionTo == 'phone' && !loading">
                 {{ lang.sign_up }}
-              </button>
+              </button> -->
+
               <loading_button v-if="loading" :class_name="'btn'"></loading_button>
+              
               <button type="button" @click="registerByPhone" class="btn"
                       v-else-if="optionTo == 'email' && !otp">{{ lang.get_oTP }}
               </button>
               <p>{{ lang.have_an_account }}
                 <router-link :to="{ name : 'login' }">{{ lang.sign_in }}</router-link>
               </p>
+
               <div class="continue-with"
                    v-if="settings.is_facebook_login_activated == 1 || settings.is_google_login_activated == 1 || settings.is_twitter_login_activated == 1">
                 <p>{{ lang.or_continue_with }}</p>

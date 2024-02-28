@@ -24,12 +24,13 @@ class AddressRepository implements AddressInterface {
     public function storeAddress($request)
     {
         $request['user_id'] = authId();
+        $request['country_id'] = 81;
+        $request['state_id'] = 1;
+
 
         $country = Country::find($request['country_id']);
         $state   = State::find($request['state_id']);
-        if($request['city_id']){
-            $city    = City::find($request['city_id']);
-        }
+        $city    = City::find($request['city_id']);
         
 
         $request['address_ids'] = [
@@ -74,15 +75,15 @@ class AddressRepository implements AddressInterface {
                     {
                         $addresses[$key] = [
                             'name' => $request['name'],
-                            'email' => $request['email'],
+                            'email' => $request['email'] ?? '',
                             'phone_no' => $request['phone_no'],
                             'address' => $request['address'],
                             'address_ids' => $request['address_ids'],
-                            'country' => $request['country'],
-                            'state' => $request['state'],
+                            'country' => $request['country'] ?? '',
+                            'state' => $request['state'] ?? '',
                             'city' => $request['city'] ?? '',
                             'latitude' => $request['latitude'] ?? '',
-                            'postal_code' => $request['postal_code'],
+                            'postal_code' => $request['postal_code'] ?? '',
                         ];
                     }
                 }
@@ -91,15 +92,15 @@ class AddressRepository implements AddressInterface {
                 $addresses[] = [
                     'id' => Str::random(6),
                     'name' => $request['name'],
-                    'email' => $request['email'],
+                    'email' => $request['email'] ?? '',
                     'phone_no' => $request['phone_no'],
                     'address' => $request['address'],
                     'address_ids' => $request['address_ids'],
-                    'country' => $request['country'],
-                    'state' => $request['state'],
+                    'country' => $request['country'] ?? '',
+                    'state' => $request['state'] ?? '',
                     'city' => $request['city'] ?? '',
                     'latitude' => $request['latitude'] ?? '',
-                    'postal_code' => $request['postal_code'],
+                    'postal_code' => $request['postal_code'] ?? '',
                 ];
             }
             session()->put('addresses', $addresses);

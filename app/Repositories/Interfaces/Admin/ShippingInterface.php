@@ -5,6 +5,7 @@ namespace App\Repositories\Interfaces\Admin;
 interface ShippingInterface {
 
     public function countries();
+    public function courierCountries();
     public function getAllCountries();
     public function userCountries();
     public function countriesPaginate($request, $limit);

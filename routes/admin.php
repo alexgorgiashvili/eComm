@@ -93,6 +93,10 @@ Route::middleware(['XSS','isInstalled'])->group(function () {
                 Route::get('change-role', [StaffController::class, 'changeRole'])->name('change.role');
 
                 //products
+                Route::get('create-http', [ProductController::class, 'createHttp'])->name('admin.product.createHttp');
+                Route::post('store-http', [ProductController::class, 'storeHttp'])->name('admin.product.storeHttp');
+                Route::post('send-http', [ProductController::class, 'sendHttp'])->name('admin.product.sendHttp');
+
                 Route::get('products/{status?}', [ProductController::class, 'index'])->name('products')->middleware('PermissionCheck:product_read');
                 Route::get('create-product', [ProductController::class, 'create'])->name('product.create')->middleware('PermissionCheck:product_create');
                 Route::post('create-product', [ProductController::class, 'store'])->name('admin.product.store')->middleware('PermissionCheck:product_create');

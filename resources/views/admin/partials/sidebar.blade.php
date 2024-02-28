@@ -90,6 +90,9 @@
                     </a>
                     <ul class="dropdown-menu">
                         @if(hasPermission('product_create'))
+                            <li class="@yield('product-createHttp')"><a class="nav-link"
+                                                                    href="{{ route('admin.product.createHttp') }}">{{ __('Add Scrapped Product') }}</a>
+                            </li>
                             <li class="@yield('product-create')"><a class="nav-link"
                                                                     href="{{ route('product.create') }}">{{ __('Add New Product') }}</a>
                             </li>

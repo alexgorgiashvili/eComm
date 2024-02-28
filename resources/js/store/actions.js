@@ -130,6 +130,13 @@ export default {
             context.commit("setCountryList", response.data.countries);
         });
     },
+    courierCountryList(context)
+    {
+        let url = context.state.url + '/get/courier-country-list';
+        axios.get(url).then((response) => {
+            context.commit("setCountryList", response.data.countries);
+        });
+    },
     settings(context, settings) {
         context.commit('getSettings', settings);
     },

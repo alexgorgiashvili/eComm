@@ -26,7 +26,7 @@
                 <span class="validation_error"
                       v-if="errors.name">{{ errors.name[0] }}</span>
               </div>
-              <div class="col-md-6">
+              <!-- <div class="col-md-6">
                 <div class="form-group">
                   <label>{{ lang.email }}</label>
                   <input type="email" class="form-control"
@@ -36,14 +36,14 @@
                 </div>
                 <span class="validation_error"
                       v-if="errors.email">{{ errors.email[0] }}</span>
-              </div>
+              </div> -->
               <div class="col-md-6">
                 <label>{{ lang.phone }}</label>
                 <telePhone @phone_no="getNumber" :phone_error="errors.phone_no ? errors.phone_no[0] : null"></telePhone>
                 <span class="validation_error"
                       v-if="errors.phone_no">{{ errors.phone_no[0] }}</span>
               </div>
-              <div class="col-md-6">
+              <!-- <div class="col-md-6">
                 <div class="form-group">
                   <label>{{ lang.country }}</label>
                   <v-select :dir="settings.text_direction" label="name" :options="countries" v-model="form.country_id" :reduce="(option) => option.id" @input="getStates()" :class="{ 'error_border' : errors.country_id }"></v-select>
@@ -66,8 +66,15 @@
                 </div>
                 <span class="validation_error"
                       v-if="errors.city_id">{{ errors.city_id[0] }}</span>
-              </div>
+              </div> -->
               <div class="col-md-6">
+                <div class="form-group">
+                  <label>{{ lang.city }}</label>
+                  <v-select :dir="settings.text_direction" label="name" :options="cities" v-model="form.city_id" :reduce="(option) => option.id" :class="{ 'error_border' : errors.city_id }"></v-select>
+                </div>
+                <span class="validation_error" v-if="errors.city_id">{{ errors.city_id[0] }}</span>
+              </div>
+              <!-- <div class="col-md-6">
                 <div class="form-group">
                   <label>{{ lang.postal_code }}</label>
                   <input type="text" class="form-control"
@@ -78,7 +85,7 @@
                 <span class="validation_error" v-if="errors.postal_code">{{
                     errors.postal_code[0]
                   }}</span>
-              </div>
+              </div> -->
               <div class="col-md-12">
                 <div class="form-group">
                   <div class="form-group">
@@ -120,13 +127,13 @@ export default {
       address_area_title : '',
       form: {
         name: '',
-        email: '',
+        // email: '',
         phone_no: '',
         address: '',
-        country_id: '',
-        state_id: '',
+        // country_id: '',
+        // state_id: '',
         city_id: '',
-        postal_code: '',
+        // postal_code: '',
         id: '',
       },
       states: [],
@@ -136,19 +143,25 @@ export default {
     }
   },
   mounted() {
+    // console.log('Countries:', this.countries);
+    this.getCities();
     this.address_area_title = this.lang.address_area_title;
     this.address_submit_button = this.lang.address_submit_button;
   },
   watch: {
+
     lang() {
       this.address_area_title = this.lang.address_area_title;
       this.address_submit_button = this.lang.address_submit_button;
     }
   },
   computed: {
-    countries() {
-      return this.$store.getters.getCountryList;
-    }
+
+    // countries() {
+      
+    //   return this.$store.getters.getCountryList;
+    // }
+
   },
   methods : {
     saveAddress() {
@@ -166,13 +179,13 @@ export default {
           this.address_area = false;
           this.form.id = '';
           this.form.name = '';
-          this.form.email = '';
+          // this.form.email = '';
           this.form.phone_no = '';
           this.form.address = '';
-          this.form.country_id = '';
-          this.form.state_id = '';
+          // this.form.country_id = '';
+          // this.form.state_id = '';
           this.form.city_id = '';
-          this.form.postal_code = '';
+          // this.form.postal_code = '';
           this.address_area_title = this.lang.address_area_title;
           this.address_submit_button = this.lang.address_submit_button;
           this.$store.commit('setMobileNo', '');
@@ -187,37 +200,54 @@ export default {
     getNumber(number) {
       this.form.phone_no = number;
     },
-    getStates(address) {
-      let country_id = this.form.country_id;
 
-      let url = this.getUrl('state/by-country/' + country_id);
+    getCities() {
+      let stateId = 1;
+      let url = this.getUrl('city/by-state/' + stateId);
+
       axios.get(url).then((response) => {
-        if (response.data.error) {
-          toastr.error(response.data.error, this.lang.Error + ' !!');
-        } else {
-          this.states = response.data.states;
-          if (address && address.address_ids) {
-            this.form.state_id = parseInt(address.address_ids.state_id);
-            this.getCities(address);
+          if (response.data.error) {
+            toastr.error(response.data.error, this.lang.Error + ' !!');
+          } else {
+            this.cities = response.data.cities; // Update cities array with fetched cities data
           }
-        }
+        }).catch((error) => {
+          toastr.error(error.message, this.lang.Error + ' !!');
       });
     },
-    getCities(address) {
-      let state_id = this.form.state_id;
 
-      let url = this.getUrl('city/by-state/' + state_id);
-      axios.get(url).then((response) => {
-        if (response.data.error) {
-          toastr.error(response.data.error, this.lang.Error + ' !!');
-        } else {
-          this.cities = response.data.cities;
-          if (address && address.address_ids) {
-            this.form.city_id = parseInt(address.address_ids.city_id);
-          }
-        }
-      });
-    },
+ // getCities(address) {
+    //   let state_id = this.form.state_id;
+
+    //   let url = this.getUrl('city/by-state/' + state_id);
+    //   axios.get(url).then((response) => {
+    //     if (response.data.error) {
+    //       toastr.error(response.data.error, this.lang.Error + ' !!');
+    //     } else {
+    //       this.cities = response.data.cities;
+    //       if (address && address.address_ids) {
+    //         this.form.city_id = parseInt(address.address_ids.city_id);
+    //       }
+    //     }
+    //   });
+    // },
+    // getStates(address) {
+    //   let country_id = this.form.country_id;
+
+    //   let url = this.getUrl('state/by-country/' + country_id);
+    //   axios.get(url).then((response) => {
+    //     if (response.data.error) {
+    //       toastr.error(response.data.error, this.lang.Error + ' !!');
+    //     } else {
+    //       this.states = response.data.states;
+    //       if (address && address.address_ids) {
+    //         this.form.state_id = parseInt(address.address_ids.state_id);
+    //         this.getCities(address);
+    //       }
+    //     }
+    //   });
+    // },
+   
     edit(address) {
       this.errors = [];
       this.address_area = true;

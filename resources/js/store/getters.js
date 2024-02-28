@@ -222,6 +222,9 @@ export default {
     getCountryList(state) {
         return state.countryList;
     },
+    getCourierCountryList(state) {
+        return state.courierCountryList;
+    },
     getResponseDone(state)
     {
         return state.response_done;

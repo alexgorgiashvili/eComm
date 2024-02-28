@@ -22,6 +22,7 @@
               <span class="validation_error" v-if="errors.email">{{ errors.email[0] }}</span>
 
               <div v-if="optionTo=='email'">
+                <p>{{ optionTo }}</p>
                 <telePhone @phone_no="getNumber" :phone_error="errors.phone ? errors.phone[0] : null"></telePhone>
 
               </div>
@@ -32,11 +33,11 @@
                     optionTo == 'email' ? lang.use_email_instead : lang.use_phone_instead
                   }}</a>
               </div>
-              <div class="form-group mt-4" v-if="otp_field">
+              <!-- <div class="form-group mt-4" v-if="otp_field">
                 <span class="mdi mdi-name mdi-lock-outline"></span>
                 <input type="text" v-model="phoneForm.otp" class="form-control"
                        :placeholder="lang.enter_your_otp">
-              </div>
+              </div> -->
               <div class="form-group" :class="{ 'mt-4' : !addons.includes('otp_system') }" v-if="optionTo=='phone'">
                 <span class="mdi mdi-name mdi-lock-outline"></span>
                 <input type="password" v-model="form.password" class="form-control"
@@ -130,7 +131,7 @@ export default {
         phone: '',
         otp: '',
       },
-      otp_field: false,
+      otp_field: true,
       loading: false,
       optionTo: 'phone',
       buttonText: 'Sign In',
@@ -144,7 +145,7 @@ export default {
     if (this.settings.is_recaptcha_activated == 1) {
       this.captcha();
     }
-    this.loginOptions();
+    this.loginOptions(); // Call loginOptions with optionTo
   },
   watch: {
     lang() {
@@ -180,21 +181,24 @@ export default {
       });
       this.$store.commit('getCountCompare', true);
 
-      if (direct_login != 'direct_login') {
-        if (this.optionTo == 'phone') {
-          form = this.form;
-        } else if (this.optionTo == 'email' && !this.otp_field) {
-          if (!this.settings.disable_otp)
-          {
-            url = this.getUrl('get-otp');
-          }
-          form = this.phoneForm;
-        } else if (this.otp_field) {
+      // if (direct_login != 'direct_login') {
+      //   if (this.optionTo == 'phone') {
+      //     form = this.form;
+      //     console.log(form);
+      //   } else if (this.optionTo == 'email' && !this.otp_field) {
+      //     if (!this.settings.disable_otp)
+      //     {
+      //       url = this.getUrl('get-otp');
+      //     }
+      //     form = this.phoneForm;
+      //   } else if (this.otp_field) {
           url = this.getUrl('submit-otp');
           form = this.phoneForm;
-        }
-      }
-
+      //   }
+      // }
+//         console.log(url);
+//         console.log(form);
+// return;
       this.loading = true;
 
       axiosWithCredentials.post(url, form).then((response) => {
@@ -208,10 +212,17 @@ export default {
           window.captcha = '';
           this.errors = [];
 
+          // if (this.optionTo == 'phone' && !this.otp_field) {
+          // // Redirect to the dashboard after successful phone submission
+          //   this.$router.push({ name: 'dashboard' });
+          //   return; // Stop further execution to prevent default redirection
+          // }
+
           if (this.optionTo == 'email' && !this.otp_field && direct_login != 'direct_login' && !this.settings.disable_otp) {
             this.otp_field = true;
             this.buttonText = this.lang.sign_in;
           } else {
+
             if (this.loginRedirect) {
               this.$router.push({name: this.loginRedirect});
             } else {
@@ -224,10 +235,11 @@ export default {
               } else if (user.user_type == 'admin' || user.user_type == 'staff') {
                 this.loading = true;
                 document.location.href = this.getUrl('admin/dashboard');
-              } else if (user.user_type == 'seller') {
-                this.loading = true;
-                document.location.href = this.getUrl('seller/dashboard');
               }
+              //  else if (user.user_type == 'seller') {
+              //   this.loading = true;
+              //   document.location.href = this.getUrl('seller/dashboard');
+              // }
             }
 
             this.$store.dispatch('carts', response.data.carts);
@@ -238,6 +250,7 @@ export default {
         }
       }).catch((error) => {
         this.loading = false;
+        console.log('ერორ');
         if (error.response && error.response.status == 422) {
           this.errors = error.response.data.errors;
         }
@@ -272,7 +285,9 @@ export default {
     },
     loginOptions(optionTo) {
       this.errors = [];
+      // console.log(optionTo);
       if (optionTo) {
+
         if (optionTo == 'phone') {
           if (this.settings.disable_otp)
           {
@@ -286,20 +301,24 @@ export default {
           this.buttonText = this.lang.sign_in;
           this.optionTo = 'phone';
         }
-      } else {
-        if (this.addons.includes('otp_system')) {
-          this.optionTo = 'email';
-          if (this.settings.disable_otp)
-          {
-            this.buttonText = this.lang.sign_in;
-          }
-          else{
-            this.buttonText = this.lang.get_oTP;
-          }
-        } else {
+      } 
+      else {
+
+        // if (this.addons.includes('otp_system')) {
+        //   this.optionTo = 'email';
+        //   if (this.settings.disable_otp)
+        //   {
+        //     this.buttonText = this.lang.sign_in;
+        //   }
+        //   else{
+        //     this.buttonText = this.lang.get_oTP;
+        //   }
+        //   } else {
           this.buttonText = this.lang.sign_in;
-          this.optionTo = 'phone';
-        }
+          this.optionTo = 'email';
+        // }
+        // console.log(this.optionTo);
+
       }
 
     },

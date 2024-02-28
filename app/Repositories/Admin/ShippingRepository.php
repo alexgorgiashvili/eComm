@@ -3,16 +3,23 @@
 namespace App\Repositories\Admin;
 
 use App\Models\City;
-use App\Models\Country;
 use App\Models\State;
+use App\Models\Country;
+use App\Models\CourierCity;
 use App\Repositories\Interfaces\Admin\ShippingInterface;
 
 class ShippingRepository implements ShippingInterface
 {
+
+    public function courierCountries()
+    {
+        return CourierCity::all();
+    }
     public function countries()
     {
         return Country::orderBy('name');
     }
+   
     public function getAllCountries()
     {
         return Country::with('flag')->where('status',1)->get();

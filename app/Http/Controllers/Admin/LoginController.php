@@ -44,6 +44,81 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
+    public function getOtp(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required',
+        ]);
+        try {
+            $phone = '';
+            if($request->phone):
+                $phone = str_replace(' ','',$request->phone);
+            endif;
+            $user  = User::where('phone', $phone)->first();
+            // return $user;
+            if (blank($user)):
+                return response()->json([
+                    'error' => __('User Not found')
+                ]);
+            endif;
+
+            if ($user->is_deleted == 1):
+                return response()->json([
+                    'error' => __('User Not found')
+                ]);
+            endif;
+
+            if($user->status == 0):
+                return response()->json([
+                    'error' => __('Your account status is inactive')
+                ]);
+            elseif($user->status == 2):
+                return response()->json([
+                    'error' => __('Your account is suspend')
+                ]);
+            elseif(!Activation::completed($user)):
+                return response()->json([
+                    'error' => __('Your account is not verified.Please verify your account.')
+                ]);
+            endif;
+
+            // $sms_templates  = AppSettingUtility::smsTemplates();
+
+            // $sms_template   = $sms_templates->where('tab_key','login')->first();
+            $otp            = rand(10000,99999);
+            // $sms_body       = str_replace('{otp}', $otp, $sms_template->sms_body);
+            // if (addon_is_activated('otp_system')):
+                // $query = $this->send($request->phone, $sms_body, @$sms_template->template_id);
+                // $query = true;
+                // if (is_string($query))
+                // {
+                //     return response()->json([
+                //         'error' => __('Something went wrong')
+                //     ]);
+                // }
+                // if ($query):
+                    $user->otp  = $otp;
+                    $user->save();
+                    return response()->json([
+                        'success' => __('Otp send successfully'),
+                    ]);
+                // else:
+                //     return response()->json([
+                //         'error' => __('Unable to send otp')
+                //     ]);
+                // endif;
+            // else:
+            //     return response()->json([
+            //         'error'     => __('Service is unavailable')
+            //     ]);
+            // endif;
+        } catch (\Exception $e){
+            return response()->json([
+                'error'         => $e->getMessage()
+            ]);
+        }
+    }
+
     public function postlogin(Request $request, ProductInterface $product, WishlistInterface $wishlist, CartInterface $cart)
     {
         try {
@@ -88,42 +163,14 @@ class LoginController extends Controller
                 ]);
             endif;
 
-            if ($user->user_type == 'seller'):
-                if (empty($user->sellerProfile->verified_at)):
-                    if (request()->ajax())
-                    {
-                        return response()->json([
-                            'error' => __('Registration is successful, Wait for the Approval')
-                        ]);
-                    }
-                    else{
-                        Toastr::error(__('Please Verify Your Mail First'));
-                        return back()->withInput();
-                    }
 
-                endif;
-
-                if (settingHelper('seller_system') != 1):
-                    if (request()->ajax())
-                    {
-                        return response()->json([
-                            'error' => __('You Are Not Allowed to Login')
-                        ]);
-                    }
-                    else {
-                        Toastr::error(__('You Are Not Allowed to Login'));
-                        return back()->withInput();
-                    }
-                endif;
-            endif;
-
-            if ($request->has('otp') && settingHelper('disable_otp_verification') != 1):
-                if ($user->otp != $request->otp):
-                    return response()->json([
-                        'error' => __("OTP did not match. Please provide correct OTP")
-                    ]);
-                endif;
-            endif;
+            // if ($request->has('otp') && settingHelper('disable_otp_verification') != 1):
+            //     if ($user->otp != $request->otp):
+            //         return response()->json([
+            //             'error' => __("OTP did not match. Please provide correct OTP")
+            //         ]);
+            //     endif;
+            // endif;
 
             if ($user->status == 0):
                 return response()->json([
@@ -289,79 +336,7 @@ class LoginController extends Controller
         endif;
     }
 
-    public function getOtp(Request $request)
-    {
-        $request->validate([
-            'phone' => 'required',
-        ]);
-        try {
-            $phone = '';
-            if($request->phone):
-                $phone = str_replace(' ','',$request->phone);
-            endif;
-            $user  = User::where('phone', $phone)->first();
 
-            if (blank($user)):
-                return response()->json([
-                    'error' => __('User Not found')
-                ]);
-            endif;
-
-            if ($user->is_deleted == 1):
-                return response()->json([
-                    'error' => __('User Not found')
-                ]);
-            endif;
-
-            if($user->status == 0):
-                return response()->json([
-                    'error' => __('Your account status is inactive')
-                ]);
-            elseif($user->status == 2):
-                return response()->json([
-                    'error' => __('Your account is suspend')
-                ]);
-            elseif(!Activation::completed($user)):
-                return response()->json([
-                    'error' => __('Your account is not verified.Please verify your account.')
-                ]);
-            endif;
-
-            $sms_templates  = AppSettingUtility::smsTemplates();
-
-            $sms_template   = $sms_templates->where('tab_key','login')->first();
-            $otp            = rand(10000,99999);
-            $sms_body       = str_replace('{otp}', $otp, $sms_template->sms_body);
-            if (addon_is_activated('otp_system')):
-                $query = $this->send($request->phone, $sms_body, @$sms_template->template_id);
-                if (is_string($query))
-                {
-                    return response()->json([
-                        'error' => __('Something went wrong')
-                    ]);
-                }
-                if ($query):
-                    $user->otp  = $otp;
-                    $user->save();
-                    return response()->json([
-                        'success' => __('Otp send successfully'),
-                    ]);
-                else:
-                    return response()->json([
-                        'error' => __('Unable to send otp')
-                    ]);
-                endif;
-            else:
-                return response()->json([
-                    'error'     => __('Service is unavailable')
-                ]);
-            endif;
-        } catch (\Exception $e){
-            return response()->json([
-                'error'         => $e->getMessage()
-            ]);
-        }
-    }
 
     public function checkAuth(OrderInterface $order): \Illuminate\Http\JsonResponse
     {

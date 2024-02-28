@@ -28,6 +28,25 @@ class MediaRepository implements MediaInterface
         });
     }
 
+    public function storeHttp($image, $type = 'image',$token=null)
+    {
+        DB::beginTransaction();
+        try{
+            if ($type == 'image'):
+                $response = $this->saveImageHttp($image, '_media_', true,$token);
+            else:
+                $response = $this->saveFile($image, $type);
+            endif;
+
+            DB::commit();
+            return $response;
+        } catch (\Exception $e){
+            DB::rollback();
+
+            return false;
+        }
+    }
+
     public function paginate($request, $limit)
     {
         $medias = Media::query();

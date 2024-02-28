@@ -57,7 +57,19 @@ class AddressController extends Controller
             ]);
         }
     }
-
+    public function courierCountries(ShippingInterface $shipping): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $data = [
+                'countries' => 'geo',
+            ];
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
     public function countries(ShippingInterface $shipping): \Illuminate\Http\JsonResponse
     {
         try {
@@ -104,12 +116,12 @@ class AddressController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
+            // 'email' => 'required',
             'phone_no' => 'required',
-            'country_id' => 'required',
-            'state_id' => 'required',
-            'city_id' => 'nullable',
-            'postal_code' => 'required',
+            // 'country_id' => 'required',
+            // 'state_id' => 'required',
+            'city_id' => 'required',
+            // 'postal_code' => 'required',
             'address' => 'required',
         ]);
         try {
