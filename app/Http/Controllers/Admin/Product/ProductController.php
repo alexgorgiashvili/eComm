@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Admin\VatTaxRepository;
 use App\Repositories\Interfaces\Admin\MediaInterface;
@@ -80,15 +81,18 @@ class ProductController extends Controller
 
 
     public function storeHttp(Request $request){
-        dd('ww');
-        $order = json_decode($request->getContent(), true);
-        Log::info(['order' => $order]);
-        
+        // dd('store');
+        Log::info(['order_start' => 'true']);
+        // $order = json_decode($request->getContent(), true);
+        // Log::info(['order' => 'test']);
+        // Log::info(['order' => $order]);
+
+
         // return true;
-        $dataId = $order['resource']['defaultDatasetId'];
-        // $dataId = 'uCGh0kO548l30OJt5';
+        // $dataId = $order['resource']['defaultDatasetId'];
+        $dataId = 'nr7s0aQuabOydoCiL';
         
-                $url = "https://api.apify.com/v2/datasets/$dataId/items?token=apify_api_f6i7MDtX689r3OswHTebsycDAXYygB1HPjb6&clean=false&fields=category%2CoriginalCategory%2CallVariants%2Cattributes%2Cbrand%2Cname%2Cgender%2Cimages%2Cprice%2CratingScore";
+                $url = "https://api.apify.com/v2/datasets/$dataId/items?token=apify_api_690Mflmb0CedA2kUV2h2TKHZaEwNd32DVzwE&clean=false&fields=category%2CoriginalCategory%2CallVariants%2Cattributes%2Cbrand%2Cname%2Cgender%2Cimages%2Cprice%2CratingScore";
         
                 $response = Http::get($url);
                 $data = json_decode($response->body(), true);
@@ -167,11 +171,13 @@ class ProductController extends Controller
 
     public function sendHttp(Request $request){
 
+        dd('send');
         $url = $request->url;
         // $log = Log::info(['log' => $url]);
+        // Log::info(['result problem' => 'true']);
 
         // return $url;
-        $task = "https://api.apify.com/v2/acts/yeyo~trendyol-scraper/runs?token=apify_api_f6i7MDtX689r3OswHTebsycDAXYygB1HPjb6";
+        $task = "https://api.apify.com/v2/acts/yeyo~trendyol-scraper/runs?token=apify_api_690Mflmb0CedA2kUV2h2TKHZaEwNd32DVzwE";
         $input = [
                     "input" => [
                         [ 
@@ -184,7 +190,7 @@ class ProductController extends Controller
                 ];
             $response = Http::post($task,$input);
             $data = json_decode($response, true);
-            Log::info(['log' => $data]);
+            // Log::info(['log' => $data]);
 
             // dd($data);
             if($response->successful()){

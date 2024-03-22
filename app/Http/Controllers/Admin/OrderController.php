@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Repositories\Interfaces\Admin\DeliveryHero\DeliveryHeroInterface;
-use App\Repositories\Interfaces\Admin\LanguageInterface;
-use App\Repositories\Interfaces\Admin\OrderInterface;
-use App\Repositories\Interfaces\Admin\SellerInterface;
-use App\Repositories\Interfaces\UserInterface;
-use Brian2694\Toastr\Facades\Toastr;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Http;
+use App\Repositories\Interfaces\UserInterface;
+use App\Repositories\Interfaces\Admin\OrderInterface;
+use App\Repositories\Interfaces\Admin\SellerInterface;
+use App\Repositories\Interfaces\Admin\LanguageInterface;
+use App\Repositories\Interfaces\Admin\DeliveryHero\DeliveryHeroInterface;
 
 class OrderController extends Controller
 {
@@ -26,6 +30,73 @@ class OrderController extends Controller
         $this->seller   = $seller;
     }
 
+  
+  
+
+    public function sendTrackingToGG(Request $request)
+    {
+        try {
+            $tracking = $request->input('tracking');
+            $productId = $request->input('productId');
+            $orderId = $request->input('orderId');
+            $order = Order::find($orderId);
+            // return $order->user;
+            if (!$order) {
+                return response()->json(['error' => 'Order not found'], 404);
+            }
+            
+            $orderDetail = OrderDetail::where('product_id', $productId)->first();
+    
+            if (!$orderDetail) {
+                return response()->json(['error' => 'Order detail not found'], 404);
+            }
+    
+            $orderDetail->tr_tracking = $tracking;
+            $orderDetail->save();
+    
+            $ggOrderId = $order->gg_order_id;
+            if ($request->hasFile('invoiceFile') && $request->file('invoiceFile')->isValid()) {
+                $invoiceFile = $request->file('invoiceFile');
+                $requestData = [
+                    'tracking' => $tracking,
+                    'address' => $request->input('order')
+                ];
+                if ($ggOrderId !== null) {
+                    $requestData['gg_order_id'] = $ggOrderId;
+                }
+                
+                $response =  Http::attach('invoiceFile', file_get_contents($invoiceFile), 'invoice.jpg')
+                    ->post('https://giogroup.ge/serviceProj', $requestData);
+            }
+    
+            if ($response->successful()) {
+                $responseData = $response->json();
+                if ($ggOrderId === null && isset($responseData['courier_address_id'])) {
+                    $order->gg_order_id = $responseData['courier_address_id'];
+                    $order->save();
+                }
+                return $responseData;
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'API request failed: ' . $e->getMessage()], 500);
+        }
+    }
+
+
+
+    
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public function index(Request $request){
         try{
             $orders             = $this->order->paginate($request, get_pagination('pagination'));
@@ -36,7 +107,20 @@ class OrderController extends Controller
             return back();
         }
     }
-
+    public function view($id){
+        try{
+            $order = $this->order->get($id);
+            /*if(settingHelper('seller_system') != 1 && $order->seller_id != 1):
+                Toastr::error(__('Seller module is inactive.'));
+                return back();
+            endif;*/
+            $delivery_heroes    = $this->user->allTypeUser()->whereHas('deliveryHero')->where('user_type','delivery_hero')->where('status',1)->where('is_user_banned',0)->get();
+            return view('admin.orders.order-details', compact('order','delivery_heroes'));
+        } catch (\Exception $e) {
+            Toastr::error($e->getMessage());
+            return back();
+        }
+    }
     public function sellerOrders(Request $request){
         try{
             if(settingHelper('seller_system') != 1):
@@ -73,20 +157,7 @@ class OrderController extends Controller
         }
     }
 
-    public function view($id){
-        try{
-            $order              = $this->order->get($id);
-            /*if(settingHelper('seller_system') != 1 && $order->seller_id != 1):
-                Toastr::error(__('Seller module is inactive.'));
-                return back();
-            endif;*/
-            $delivery_heroes    = $this->user->allTypeUser()->whereHas('deliveryHero')->where('user_type','delivery_hero')->where('status',1)->where('is_user_banned',0)->get();
-            return view('admin.orders.order-details', compact('order','delivery_heroes'));
-        } catch (\Exception $e) {
-            Toastr::error($e->getMessage());
-            return back();
-        }
-    }
+ 
 
     public function invoiceDownload($id)
     {

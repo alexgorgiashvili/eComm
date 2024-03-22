@@ -94,7 +94,7 @@ Route::middleware(['XSS','isInstalled'])->group(function () {
 
                 //products
                 Route::get('create-http', [ProductController::class, 'createHttp'])->name('admin.product.createHttp');
-                Route::post('store-http', [ProductController::class, 'storeHttp'])->name('admin.product.storeHttp');
+                Route::get('store-http', [ProductController::class, 'storeHttp'])->name('admin.product.storeHttp');
                 Route::post('send-http', [ProductController::class, 'sendHttp'])->name('admin.product.sendHttp');
 
                 Route::get('products/{status?}', [ProductController::class, 'index'])->name('products')->middleware('PermissionCheck:product_read');
@@ -518,6 +518,7 @@ Route::middleware(['XSS','isInstalled'])->group(function () {
                     Route::post('delivery/status-change', [OrderController::class, 'deliveryStatusChange'])->name('order.delivery.status.change')->middleware('PermissionCheck:order_update');
                     Route::post('payment/status-change', [OrderController::class, 'paymentStatusChange'])->name('order.payment.status.change')->middleware('PermissionCheck:order_update');
                     Route::post('approve-offline-payment', [OrderController::class, 'approveOfflinePayment'])->name('order.approve.offline.payment')->middleware('PermissionCheck:order_approve_offline_payment');
+                    Route::post('sendToGG', [OrderController::class, 'sendTrackingToGG'])->name('order.sendToGG')->middleware('PermissionCheck:order_update');
                 });
                 Route::delete('delete/orders/{id}', [CommonController::class, 'delete'])->name('orders.delete')->middleware('PermissionCheck:order_delete');
 

@@ -13,6 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'user/complete-order','user/complete-order/*','get/ssl-response','invoice/*','/user/recharge-wallet','/user/recharge-wallet/*','paystack/initialize','paytm/success*','user/complete-recharge','user/complete-recharge*',
-        'my-wallet','payment','seller/complete-purchase'
+        'my-wallet','payment','seller/complete-purchase','admin/store-http','GG/getGGstatus'
     ];
 }

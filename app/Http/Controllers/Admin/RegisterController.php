@@ -57,23 +57,23 @@ class RegisterController extends Controller
                 ]);
             }
             $otp = rand(10000, 99999);
-           if ($request->phone && addon_is_activated('otp_system')):
-                $sms_templates  = AppSettingUtility::smsTemplates();
-                $sms_template   = $sms_templates->where('tab_key','signup')->first();
-                $sms_body       = str_replace('{otp}', $otp, @$sms_template->sms_body);
-               $query = $this->send($request->phone, $sms_body, @$sms_template->template_id);
-               if (is_string($query))
-               {
-                   return response()->json([
-                       'error' => __('Something went wrong')
-                   ]);
-               }
-                if (!$query):
-                    return response()->json([
-                        'error' => __('Unable to send otp')
-                    ]);
-                endif;
-            endif;
+        //    if ($request->phone && addon_is_activated('otp_system')):
+        //         $sms_templates  = AppSettingUtility::smsTemplates();
+        //         $sms_template   = $sms_templates->where('tab_key','signup')->first();
+        //         $sms_body       = str_replace('{otp}', $otp, @$sms_template->sms_body);
+        //        $query = $this->send($request->phone, $sms_body, @$sms_template->template_id);
+        //        if (is_string($query))
+        //        {
+        //            return response()->json([
+        //                'error' => __('Something went wrong')
+        //            ]);
+        //        }
+        //         if (!$query):
+        //             return response()->json([
+        //                 'error' => __('Unable to send otp')
+        //             ]);
+        //         endif;
+        //     endif;
             $request['otp'] = $otp;
             RegistrationRequest::create($request->all());
             return response()->json([

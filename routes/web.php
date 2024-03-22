@@ -24,10 +24,16 @@ use App\Http\Controllers\Site\SocialController;
 use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\WishlistController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\GG\ApiGgController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('cache-clear', [HomeController::class, 'cacheClear'])->name('cache.clear');
 Route::get('get-database', [HomeController::class, 'getDb'])->name('get.database');
+
+Route::prefix('GG')->group(function () {
+    Route::post('getGGstatus', [ApiGgController::class, 'getGGstatus']);
+});
 
 Route::post('password-check', [HomeController::class, 'passwordVerify'])->name('password.check');
 Route::middleware(['XSS', 'isInstalled'])->group(function () {

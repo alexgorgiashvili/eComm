@@ -106,86 +106,25 @@
                     </div>
                 </div>
                 <div class="invoice-print">
-                    <div class="row">
-                        <div class="col-lg-12 pt-2">
-                            <div class="invoice-title">
-                                @php
-                                    $logo = settingHelper('admin_dark_logo')
-                                @endphp
-                                <img
-                                        src="{{($logo != [] && is_file_exists($logo['image_100x38'])) ? static_asset($logo['image_100x38']) : static_asset('images/default/dark-logo.png') }}"
-                                        alt="logo" width="100">
-                                <h2>{{ __('Invoice') }}</h2>
-                                <div class="invoice-number">{{__('Order')}} #{{ $order->code }}</div>
-                            </div>
-                            <hr>
-                            @if(!$order->pickupHub)
-                                <div class="row">
-                                    <div class="col-md-6 col-12 col-sm-6">
-                                        <address>
-                                            <strong>{{__('Billed To')}}:</strong><br>
-                                            {{ arrayCheck('name',$order->billing_address) ? @$order->billing_address['name'] : '' }}<br>
-                                            {{ arrayCheck('email',$order->billing_address) ? @$order->billing_address['email'] : '' }}<br>
-                                            {{ arrayCheck('phone_no',$order->billing_address) ? @$order->billing_address['phone_no'] : '' }}<br>
-                                            {{ @$order->billing_address['address'] }} {{ @$order->billing_address['address'] ? ',' : ''}}
-                                            <br>
-                                            {{ @$order->billing_address['city'] }} {{ @$order->billing_address['city'] ? ',' : '' }}
-                                            {{ @$order->billing_address['country'] }}
-                                        </address>
-                                    </div>
-                                    <div class="col-md-6 col-12 col-sm-6 text-md-right">
-                                        <address>
-                                            <strong>{{__('Shipped To')}}:</strong><br>
-                                            {{ arrayCheck('name',$order->shipping_address) ? @$order->shipping_address['name'] : '' }}<br>
-                                            {{ arrayCheck('email',$order->shipping_address) ? @$order->shipping_address['email'] : '' }}<br>
-                                            {{ arrayCheck('phone_no',$order->shipping_address) ? @$order->shipping_address['phone_no'] : '' }}<br>
-                                            {{ @$order->shipping_address['address'] }} {{ @$order->shipping_address['address'] ? ',' : ''}}
-                                            <br>
-                                            {{ @$order->shipping_address['city'] }} {{ @$order->shipping_address['city'] ? ',' : ''}}
-                                            {{ @$order->shipping_address['country'] }}
-                                        </address>
-                                    </div>
-                                </div>
-                            @endif
 
-                            <div class="row">
-
-                                <div class="col-md-6 col-12 col-sm-6">
-                                    @if($order->pickupHub)
-                                        <address>
-                                            <strong>{{__('Pickup Hub ')}}:</strong><br>
-                                            {{ __('Name') }} : {{ @$order->pickupHub->name }}<br>
-                                            {{ __('Manager') }} : {{ @$order->pickupHub->incharge->full_name .',' }}<br>
-                                            {{ __('Address') }} : {{ @$order->pickupHub->address }}<br>
-                                        </address>
-                                    @endif
-                                </div>
-
-                                <div class="col-md-6 col-12 col-sm-6 text-md-right">
-                                    <address>
-                                        <strong>{{__('Order Date')}}:</strong><br>
-                                        {{ \Carbon\Carbon::parse($order->date)->format('d F, Y h:i:s A') }}<br><br>
-                                    </address>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
+                    <div class="row ">
                         <div class="col-md-12">
-                            <div class="section-title">{{__('Order Summary')}}</div>
+                            <div class="section-title d-flex justify-content-between">
+                                <span>{{__('Order Summary')}}</span>
+                                <button class="btn btn-primary mt-2" id="send-all-data-btn">Send All Data</button>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover table-md">
                                     <tr>
                                         <th width="5%">#</th>
-                                        <th width="40%">{{__('Product')}}</th>
+                                        <th width="25%">{{__('Product')}}</th>
+                                        <th class="text-center" width="25%">{{__('tracking')}}</th>
                                         <th class="text-center" width="15%">{{__('Unit Price')}}</th>
                                         <th class="text-center" width="15%">{{__('Quantity')}}</th>
                                         <th class="text-center" width="15%">{{__('Sub Total')}}</th>
-                                        @if(($order->tax_method && $order->tax_method['vat_tax_type'] == 'product_base') || (!$order->tax_method || !$order->tax_method['vat_tax_type']))
+                                        {{-- @if(($order->tax_method && $order->tax_method['vat_tax_type'] == 'product_base') || (!$order->tax_method || !$order->tax_method['vat_tax_type']))
                                             <th class="text-center" width="15%">{{__('Tax')}}</th>
-                                        @endif
+                                        @endif --}}
                                         @if($order->shipping_method == 'product_base' || !$order->shipping_method)
 
                                             <th class="text-center" width="15%">{{__('Shipping Cost')}}</th>
@@ -198,17 +137,17 @@
                                                 <th class="text-center" width="15%">{{__('Coupon Discount')}}</th>
                                             @endif
                                         @endforeach
-                                        <th class="text-center" width="15%">{{__('Discount')}}</th>
+                                        {{-- <th class="text-center" width="15%">{{__('Discount')}}</th> --}}
                                         <th class="text-right" width="25%">{{__('Totals')}}</th>
                                     </tr>
                                     @foreach ($order->orderDetails as $key => $orderDetail)
                                         @php
                                             $product = $orderDetail->product;
                                             $coupon_discount = $orderDetail->coupon_discount['discount'];
-                                            $tax = $orderDetail->tax * $orderDetail->quantity;
+                                            // $tax = $orderDetail->tax * $orderDetail->quantity;
                                             $shipping_cost = $orderDetail->shipping_cost['total_cost'];
                                             $discount = $orderDetail->discount * $orderDetail->quantity;
-                                            $sub_total = (($orderDetail->price * $orderDetail->quantity) + $tax + $shipping_cost) - $discount;
+                                            $sub_total = (($orderDetail->price * $orderDetail->quantity) + $shipping_cost) - $discount;
                                         @endphp
                                         <tr>
                                             <td>{{ $key+1 }}</td>
@@ -256,6 +195,39 @@
                                                     @endif
                                                 </div>
                                             </td>
+                                            <td class="text-center">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control tracking-input" placeholder="tracking" data-product-id="{{ $product->id }}">
+                                                    <div class="input-group-append">
+                                                        <label class="btn btn-secondary text-dark" style="cursor: pointer">
+                                                            Invoice
+                                                            <input type="file" class="d-none invoice-input" data-product-id="{{ $product->id }}">
+                                                        </label>
+                                                        <button class="btn btn-primary send-data-btn" data-product-id="{{ $product->id }}">Send Data</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            
+                                            
+                                            {{-- <td class="text-center">
+                                                <form action="{{ route('order.sendToGG') }}" method="POST" enctype="multipart/form-data">
+                                                    @csrf <!-- Add the CSRF token for security -->
+                                                    <!-- Hidden input field to pass $orderDetail -->
+                                                    <input type="hidden" name="orderDetail" value="{{ $order }}">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control tracking-input" placeholder="tracking" name="tracking">
+                                                        <div class="input-group-append">
+                                                            <label class="btn btn-secondary text-dark" style="cursor: pointer">
+                                                                Invoice
+                                                                <input type="file" class="d-none invoice-input" name="invoiceFile">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </td> --}}
+                                            
+                                            
                                             <td class="text-center">{{ get_price($orderDetail->price,user_curr()) }}</td>
                                             <td class="text-center">
                                                 {{ $orderDetail->quantity }}
@@ -265,7 +237,7 @@
                                                 X {{ $orderDetail->quantity }}
                                                 = {{ get_price($orderDetail->price * $orderDetail->quantity,user_curr()) }}
                                             </td>
-                                            @if(($order->tax_method && $order->tax_method['vat_tax_type'] == 'product_base') || (!$order->tax_method || !$order->tax_method['vat_tax_type']))
+                                            {{-- @if(($order->tax_method && $order->tax_method['vat_tax_type'] == 'product_base') || (!$order->tax_method || !$order->tax_method['vat_tax_type']))
                                                 @if($orderDetail->tax > 0)
                                                 <td class="text-center txt_nowrap">
                                                     {{ get_price($orderDetail->tax,user_curr()) }} X {{ $orderDetail->quantity }}
@@ -276,7 +248,7 @@
                                                        {{ get_price($tax,user_curr()) }}
                                                     </td>
                                                 @endif
-                                            @endif
+                                            @endif --}}
                                             @if($order->shipping_method == 'product_base' || !$order->shipping_method)
                                                 @if($orderDetail->shipping_cost['depend_on_quantity'] == 1)
                                                     <td class="text-center txt_nowrap">
@@ -290,12 +262,12 @@
                                                     </td>
                                                 @endif
                                             @endif
-                                            @if($order->is_coupon_system_active == 1)
+                                            {{-- @if($order->is_coupon_system_active == 1)
                                                 <td class="text-center txt_nowrap">
                                                     {{ get_price($coupon_discount,user_curr()) }}
                                                 </td>
-                                            @endif
-                                            @if($discount > 0)
+                                            @endif --}}
+                                            {{-- @if($discount > 0)
                                                 <td class="text-center txt_nowrap">
                                                     {{ get_price($orderDetail->discount,user_curr()) }}
                                                     X {{ $orderDetail->quantity }}
@@ -305,7 +277,7 @@
                                                 <td class="text-center txt_nowrap">
                                                     {{ get_price($discount,user_curr()) }}
                                                 </td>
-                                            @endif
+                                            @endif --}}
                                             <td class="text-right txt_nowrap">{{ get_price($sub_total,user_curr()) }}</td>
                                         </tr>
                                     @endforeach
@@ -313,6 +285,7 @@
                             </div>
                             <div class="row mt-4">
                                 <div class="col-lg-8">
+                                   
                                 </div>
                                 @php
                                     $total_payable = 0;
@@ -387,6 +360,73 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mt-4">
+                        <div class="col-lg-12 pt-2">
+                            <div class="invoice-title">
+                                @php
+                                    $logo = settingHelper('admin_dark_logo')
+                                @endphp
+                                <img
+                                        src="{{($logo != [] && is_file_exists($logo['image_100x38'])) ? static_asset($logo['image_100x38']) : static_asset('images/default/dark-logo.png') }}"
+                                        alt="logo" width="100">
+                                <h2>{{ __('Invoice') }}</h2>
+                                <div class="invoice-number">{{__('Order')}} #{{ $order->code }}</div>
+                            </div>
+                            <hr>
+                            @if(!$order->pickupHub)
+                                <div class="row">
+                                    <div class="col-md-6 col-12 col-sm-6">
+                                        <address>
+                                            <strong>{{__('Billed To')}}:</strong><br>
+                                            {{ arrayCheck('name',$order->billing_address) ? @$order->billing_address['name'] : '' }}<br>
+                                            {{ arrayCheck('email',$order->billing_address) ? @$order->billing_address['email'] : '' }}<br>
+                                            {{ arrayCheck('phone_no',$order->billing_address) ? @$order->billing_address['phone_no'] : '' }}<br>
+                                            {{ @$order->billing_address['address'] }} {{ @$order->billing_address['address'] ? ',' : ''}}
+                                            <br>
+                                            {{ @$order->billing_address['city'] }} {{ @$order->billing_address['city'] ? ',' : '' }}
+                                            {{ @$order->billing_address['country'] }}
+                                        </address>
+                                    </div>
+                                    <div class="col-md-6 col-12 col-sm-6 text-md-right">
+                                        <address>
+                                            <strong>{{__('Shipped To')}}:</strong><br>
+                                            {{ arrayCheck('name',$order->shipping_address) ? @$order->shipping_address['name'] : '' }}<br>
+                                            {{ arrayCheck('email',$order->shipping_address) ? @$order->shipping_address['email'] : '' }}<br>
+                                            {{ arrayCheck('phone_no',$order->shipping_address) ? @$order->shipping_address['phone_no'] : '' }}<br>
+                                            {{ @$order->shipping_address['address'] }} {{ @$order->shipping_address['address'] ? ',' : ''}}
+                                            <br>
+                                            {{ @$order->shipping_address['city'] }} {{ @$order->shipping_address['city'] ? ',' : ''}}
+                                            {{ @$order->shipping_address['country'] }}
+                                        </address>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="row">
+
+                                <div class="col-md-6 col-12 col-sm-6">
+                                    @if($order->pickupHub)
+                                        <address>
+                                            <strong>{{__('Pickup Hub ')}}:</strong><br>
+                                            {{ __('Name') }} : {{ @$order->pickupHub->name }}<br>
+                                            {{ __('Manager') }} : {{ @$order->pickupHub->incharge->full_name .',' }}<br>
+                                            {{ __('Address') }} : {{ @$order->pickupHub->address }}<br>
+                                        </address>
+                                    @endif
+                                </div>
+
+                                <div class="col-md-6 col-12 col-sm-6 text-md-right">
+                                    <address>
+                                        <strong>{{__('Order Date')}}:</strong><br>
+                                        {{ \Carbon\Carbon::parse($order->date)->format('d F, Y h:i:s A') }}<br><br>
+                                    </address>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
                 <hr>
                 <div class="text-md-right">
@@ -568,3 +608,70 @@
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script>
+$(document).ready(function() {
+    $('.send-data-btn').click(function() {
+        // Disable the clicked send-data button
+        $('.send-data-btn').prop('disabled', true);
+
+        var formData = new FormData();
+        var productId = $(this).data('product-id');
+        var orderId = '{{ $order->id }}';
+        
+        // Traverse up to the parent <tr> and find the tracking input within it
+        var tracking = $(this).closest('tr').find('.tracking-input').val();
+        var invoiceFileInput = $(this).closest('tr').find('.invoice-input');
+        var invoiceFile = invoiceFileInput.prop('files')[0];
+
+        if (invoiceFile) {
+            formData.append('invoiceFile', invoiceFile);
+        }
+
+        var order = {!! json_encode($order['shipping_address']) !!};
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        formData.append('tracking', tracking);
+        formData.append('productId', productId);
+        formData.append('orderId', orderId);
+        formData.append('order', JSON.stringify(order));
+        formData.append('_token', csrfToken);
+
+        $.ajax({
+            url: '{{ route("order.sendToGG") }}',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response);
+                // Re-enable the clicked send-data button after successful response
+                $('.send-data-btn').prop('disabled', false);
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                // Re-enable the clicked send-data button after error response
+                $('.send-data-btn').prop('disabled', false);
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+@endpush

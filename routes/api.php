@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V100\ShopController;
 use App\Http\Controllers\Api\V100\UserController;
 use App\Http\Controllers\Api\V100\VideoShoppingController;
 use App\Http\Controllers\Api\V100\WishlistController;
+use App\Http\Controllers\Api\GG\ApiGgController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -118,7 +119,7 @@ Route::prefix('v100')->group(function() {
         });
         Route::controller(\App\Http\Controllers\Api\V100\CampaignController::class)->group(function (){
             Route::get('get-campaigns','campaigns');
-//            Route::get('product-by-campaign/{id}','campaignProducts');
+        //          Route::get('product-by-campaign/{id}','campaignProducts');
             Route::get('campaign-details/{id}','campaignDetails');
             Route::get('campaign-products','campaignProducts');
             Route::get('campaign-data','campaignData');
