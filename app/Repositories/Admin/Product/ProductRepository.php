@@ -203,9 +203,7 @@ class ProductRepository implements ProductInterface
         $product->save();
 
         $request['product_id'] = $product->id;
-        if (!isset($request->lang)) :
-            $request['lang'] = 'en';
-        endif;
+        $request['lang'] = ['en', 'ka'];
 
         $this->productLang->store($request);
 
@@ -643,7 +641,7 @@ class ProductRepository implements ProductInterface
 
         $request['product_id'] = $product->id;
         if (!isset($request->lang)) :
-            $request['lang'] = 'en';
+            $request['lang'] = 'ka';
         endif;
 
         $this->productLang->store($request);
@@ -917,7 +915,7 @@ class ProductRepository implements ProductInterface
 
         $request['product_id'] = $product->id;
         if (!isset($request->lang)) :
-            $request['lang'] = 'en';
+            $request['lang'] = 'ka';
         endif;
 
         $this->productLang->store($request);
@@ -1151,6 +1149,7 @@ class ProductRepository implements ProductInterface
 
     public function productDetails($slug)
     {
+        // return Product::find(6);
         return Product::with(['brand:id', 'category:id', 'reviews', 'stock', 'userWishlist','userReview'])->withAvg('reviews','rating')
             ->withCount('monthlyOrders')->withCount('reviews')->where('slug', $slug)->UserCheck()->IsWholesale()->IsStockOut()->first();
     }

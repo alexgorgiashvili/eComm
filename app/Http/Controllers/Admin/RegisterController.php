@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Sentinel;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -15,9 +16,9 @@ use App\Models\RegistrationRequest;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Http\Requests\User\SignUpRequest;
+use Cartalyst\Sentinel\Laravel\Facades\Reminder;
 use Cartalyst\Sentinel\Laravel\Facades\Activation;
 use App\Repositories\Interfaces\Admin\SellerProfileInterface;
-use Sentinel;
 
 class RegisterController extends Controller
 {
@@ -28,12 +29,98 @@ class RegisterController extends Controller
 
         return view('admin.authenticate.register');
     }
+    public function checkOTP(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'phone' => 'required',
+            // 'purpose' => 'required|in:registration,password_reset',
+        ]);
+
+        try {
+            $request['phone'] = str_replace(' ', '', $request->phone);
+
+            $req = RegistrationRequest::where('phone', $request->phone)->first();
+
+            if ($req && Carbon::parse($req->created_at)->addMinutes(2) >= Carbon::now()) {
+                return response()->json([
+                    'error' => __('Verification Code was Already Sent')
+                ]);
+            }
+
+            $user = User::where('phone', $request->phone)->first();
+            if (!$user) {
+                return response()->json([
+                    'error' => __('User Not found')
+                ]);
+            }
+            RegistrationRequest::where('phone', $request->phone)->delete();
+
+
+            $otp = rand(10000, 99999);
+            $request['otp'] = $otp;
+            RegistrationRequest::create($request->all());
+
+            // return response()->json([
+            //     'data' => __('OTP Send Successfully')
+            // ]);
+            return response()->json([
+                'data' => $otp
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+      
+       
+    }
+    public function resetPassOtp(Request $request): \Illuminate\Http\JsonResponse
+    {
+     // return true;
+     $request['phone'] = str_replace(' ','',$request->phone);
+     $req = RegistrationRequest::where('phone',$request->phone)->first();
+     if (!$req)
+     {
+         return response()->json([
+             'error' => __('Verification Code Needed To Verify')
+         ]);
+     }
+
+     if ($request->otp != $req->otp) {
+         return response()->json([
+             'error' => __('OTP Doesnt Match')
+         ]);
+     }
+
+     return response()->json([
+        'data' => __('Please Type New Password')
+    ]);
+    }
+
+    public function resetPassByPhone(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $reg = RegistrationRequest::where('phone',$request->phone)->first();
+        if($reg){
+
+            RegistrationRequest::where('phone',$request->phone)->delete();
+        }
+        // return response()->json([
+        //     // 'error' => __('OTP Doesnt Match'),
+        //     'error' => $request->all()
+        // ]);
+
+        $user = User::where('phone', $request->phone)->first();
+        $user->password = bcrypt($request->newPassword);
+        $user->save();
+            return response()->json([
+                'success' => __('password_changed')
+            ]);
+       
+    }
 
     public function registerByPhone(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'first_name'    => 'required',
-            'last_name'     => 'required',
             'phone'         => 'required',
         ]);
         try {
@@ -57,27 +144,13 @@ class RegisterController extends Controller
                 ]);
             }
             $otp = rand(10000, 99999);
-        //    if ($request->phone && addon_is_activated('otp_system')):
-        //         $sms_templates  = AppSettingUtility::smsTemplates();
-        //         $sms_template   = $sms_templates->where('tab_key','signup')->first();
-        //         $sms_body       = str_replace('{otp}', $otp, @$sms_template->sms_body);
-        //        $query = $this->send($request->phone, $sms_body, @$sms_template->template_id);
-        //        if (is_string($query))
-        //        {
-        //            return response()->json([
-        //                'error' => __('Something went wrong')
-        //            ]);
-        //        }
-        //         if (!$query):
-        //             return response()->json([
-        //                 'error' => __('Unable to send otp')
-        //             ]);
-        //         endif;
-        //     endif;
             $request['otp'] = $otp;
             RegistrationRequest::create($request->all());
+            // return response()->json([
+            //     'data' => __('OTP Send Successfully')
+            // ]);
             return response()->json([
-                'data' => __('OTP Send Successfully')
+                'data' => $otp
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -87,11 +160,7 @@ class RegisterController extends Controller
     }
     public function postRegister(SignUpRequest $request, SellerProfileInterface $seller)
     {
-        if (isDemoServer()){
-            return response()->json([
-                'error' => __('This function is disabled in demo server.')
-            ]);
-        }
+    
         DB::beginTransaction();
         try {
             
@@ -107,7 +176,7 @@ class RegisterController extends Controller
                             'error' => __('Verification Code Needed To Verify')
                         ]);
                     }
-
+    
                     if ($request->otp != $req->otp) {
                         return response()->json([
                             'error' => __('OTP Doesnt Match')
@@ -115,67 +184,18 @@ class RegisterController extends Controller
                     }
                     RegistrationRequest::where('phone',$request->phone)->delete();
                 }
-
-                $request['password'] = '123456';
+    
+                // Hash the password
+                // $request['password'] = bcrypt($request->password);
+                
                 $sellerData = Sentinel::registerAndActivate($request->all());
             }
-            if( addon_is_activated('affiliate')){
-                if($request->user_type == 'affiliate-register'){
-                    $request['referral_code'] = Str::random(10);
-                    $request['user_type'] = 'customer';
-                }if($request->has('referral_code')){
-                    $user = User::where('referral_code', $request->referral_code)->first();
-                    $request['referred_by_user'] = $user->id;
-                }
-                $sellerData = Sentinel::register($request->all());
-                $activation = Activation::create($sellerData);
-                $affiliate->processAffiliateStats($sellerData,1,0,0,0);
-            }
-
-            if($request->user_type == 'seller-migrate'){
-                    $request['user_type'] = 'seller';
-                    $user = Sentinel::findById(authId());
-                    $credentials = [
-                        'user_type' => $request->user_type,
-                        'permissions' => [],
-                    ];
-
-                    $sellerData = Sentinel::update($user, $credentials);
-                    $activation = Activation::create($sellerData);
-            }else{
-                if (!$request->phone) {
-                    if (settingHelper('disable_email_confirmation') == 1)
-                    {
-                        $sellerData = Sentinel::registerAndActivate($request->all());
-                        
-                    }
-                    else{
-
-                        $sellerData = Sentinel::register($request->all());
-                        $activation = Activation::create($sellerData);
-                    }
-                }
-            }
-
-            
-            
-            if ($request->email) {
-                if (settingHelper('disable_email_confirmation') != 1)
-                {
-                    $this->sendmail($request->email, 'Registration', $sellerData, 'email.auth.activate-account-email',url('/') . '/activation/' . $request->email . '/' . $activation->code);
-                }
-                if($sellerData){
-                    $user_id = $sellerData->id;
-                    $sellerData['id'] = 1;
-                    $this->SendNotification($sellerData, __("{$sellerData->first_name} {$sellerData->last_name} has been registered"),'success','edit-customer/'.$user_id);
-                }
-            }
-            else if ($request->phone){
+    
+            if ($request->phone){
                 $user = User::where('phone',$request->phone)->first();
                 Sentinel::login($user);
             }
-
-
+    
             $request['user_id'] = $sellerData->id;
             if ($request->user_type == 'seller') {
                 $seller->store($request);
@@ -183,9 +203,9 @@ class RegisterController extends Controller
                 session()->flush();
                 session()->regenerate();
             }
-
+    
             DB::commit();
-
+    
             return response()->json([
                 'success' => $request->email && settingHelper('disable_email_confirmation') != 1 ?  __('Check your mail to verify your account') : __('Registration Successfully'),
                 'migrate_msg' => __('Request sent successfully. Wait for approval.'),
@@ -195,12 +215,13 @@ class RegisterController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+            // dd($e);
             return response()->json([
                 'error' => $e->getMessage()
             ]);
         }
     }
+    
 
     public function sellerRegister(SignUpRequest $request, SellerProfileInterface $seller)
     {

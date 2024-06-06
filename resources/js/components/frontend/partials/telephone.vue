@@ -1,28 +1,15 @@
+
 <template>
   <div class="yoori__signup--form" :class="{ 'error_border' : phone_error }">
-    <div class="country__code--config" @click.stop="activeDropDown">
+    <div class="country__code--config">
       <div class="country__code--config-details">
-          <span class="country__code--flag">
-              <img :src="defaultCountry.flag" alt="Flag" class="img-fluid">
-          </span>
-        <span class="country__dropdown"></span>
+        <span class="country__code--flag">
+          <img :src="defaultCountry.flag" alt="Flag" class="img-fluid">
+        </span>
       </div>
-      <ul @click.stop class="country__code--list" :class="activeClass">
-        <input placeholder="Search" v-model="search_key" @keyup="countrySearch" type="text" class="country__search">
-        <li v-for="(country,index) in filtered_countries" @click="getCountryCode(country)">
-          <span class="country__code--flag">
-            <img loading="lazy" :src="country.flag_icon" alt="Flag" class="img-fluid">
-          </span>
-          <span class="country__name">
-                          <strong>{{ country.name }}</strong>
-                        </span>
-          <span class="country__code--number">
-                          {{ PlusCheck(country) ? country.phonecode : '+' + country.phonecode }}
-                        </span>
-        </li>
-      </ul>
-    </div> <!-- /.country__code--config -->
-    <input type="tel" class="number" @keyup="$emit('phone_no', phone_no)" v-model="phone_no">
+    </div>
+    <!-- /.country__code--config -->
+    <input type="tel" class="number" @keyup="$emit('phone_no', phone_no)" v-model="phone_no" :disabled="disabled" >
     <input type="hidden" v-model="country_id">
   </div>
 </template>
@@ -30,7 +17,11 @@
 <script>
 export default {
   name: "telephone",
-  props : ['phone_error'],
+  // props : ['phone_error'],
+  props: {
+    phone_error: '',
+    disabled: Boolean // Add disabled prop
+  },
 
   data() {
     return {
@@ -59,6 +50,7 @@ export default {
   mounted() {
     this.country();
     this.country_id = this.settings.default_country;
+    // console.log(this.settings);
   },
   computed: {
     phone() {
@@ -103,29 +95,7 @@ export default {
       }
       this.phone_no = this.defaultCountry.code;
     },
-    activeDropDown() {
-      if (this.activeClass == 'hideShow') {
-        this.activeClass = ''
-      } else {
-        this.activeClass = 'hideShow'
-      }
-      this.$nextTick(() => {
-        document.addEventListener('click', this.hideSearchDropdown)
-      })
-    },
-    hideSearchDropdown: function () {
-      this.activeClass = 'hideShow';
-      document.removeEventListener('click', this.hideSearchDropdown)
-    },
-    countrySearch() {
-      let res;
-      res = this.countries.filter((d) => d.name || d.phonecode);
-      this.filtered_countries = res.filter(
-          (d) =>
-              (d.name && d.name.toLowerCase().includes(this.search_key) || d.phonecode.includes(this.search_key))
-      );
-      return this.filtered_countries;
-    },
+ 
     getNum() {
       this.$emit('phone_no', this.phone_no);
       this.count++

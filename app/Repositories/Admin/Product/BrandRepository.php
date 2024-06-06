@@ -3,11 +3,12 @@
 namespace App\Repositories\Admin\Product;
 
 use App\Models\Brand;
-use App\Models\BrandLanguage;
-use App\Repositories\Interfaces\Admin\Product\BrandInterface;
-use App\Traits\ImageTrait;
 use App\Traits\SlugTrait;
+use App\Traits\ImageTrait;
+use Illuminate\Http\Request;
+use App\Models\BrandLanguage;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\Interfaces\Admin\Product\BrandInterface;
 use App\Repositories\Interfaces\Admin\Product\BrandLanguageInterface;
 
 class BrandRepository implements BrandInterface
@@ -58,6 +59,32 @@ class BrandRepository implements BrandInterface
                 });
             })->paginate($limit);
     }
+
+    public function storeHttp($brandDetails)
+    {
+        $brandId = $brandDetails['id'];
+        $brandName = $brandDetails['name'];
+    
+        // Check if the brand already exists by ID
+        $brand = Brand::find($brandId);
+        $brand = new Brand();
+        $brand->id = $brandId; // Set the brand's ID to the ID from the API
+        $brand->status = 0;
+        $brand->slug = $this->getSlug($brandName); // Assuming getSlug can work with just a name
+        $brand->logo = [];
+        $brand->banner = [];
+        $brand->save();
+
+        $request = new Request([
+            'brand_id' => $brand->id,
+            'lang' => 'en',
+            'title' => $brandName,
+        ]);
+        $this->brandLanguage->store($request);
+    
+        return true;
+    }
+    
 
     public function store($request)
     {

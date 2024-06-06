@@ -18,7 +18,7 @@ class Category extends Model
         'banner' => '[]'
     ];
 
-    protected $fillable = ['parent_id'];
+    protected $fillable = ['parent_id','slug','position','api_id'];
 
 
     public function categories()

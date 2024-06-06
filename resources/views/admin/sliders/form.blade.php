@@ -1,20 +1,19 @@
 @extends('admin.partials.master')
-    @php
-        $title = isset($edit) ? trans('Slider Edit') : __('Slider Add')
-    @endphp
+@php
+    $title = isset($edit) ? trans('Slider Edit') : __('Slider Add')
+@endphp
 @section('title')
     {{ $title }}
 @endsection
 @section('main-content')
     <section class="section">
-        <div class="section-body ">
+        <div class="section-body">
             <div class="d-flex justify-content-between">
                 <div class="d-block">
                     <h2 class="section-title">{{ $title }}</h2>
                 </div>
                 <div class="buttons add-button">
-                    <a href="{{ old('r') ? old('r') : (@$r ? $r : url()->previous() )}}" class="btn btn-icon icon-left btn-outline-primary"><i
-                            class="bx bx-arrow-back"></i>{{ __('Back') }}</a>
+                    <a href="{{ old('r') ? old('r') : (@$r ? $r : url()->previous() )}}" class="btn btn-icon icon-left btn-outline-primary"><i class="bx bx-arrow-back"></i>{{ __('Back') }}</a>
                 </div>
             </div>
             <div class="row">
@@ -23,19 +22,16 @@
                         <div class="card-header input-title">
                             <h4>{{ isset($edit) ? trans('Edit Slider') : __('Add New Slider')}}</h4>
                         </div>
-                        <div class="card-body card-body-paddding">
+                        <div class="card-body card-body-padding">
                             @php
-                                $route = isset($edit) ? route('sliders.update',$edit->id) : route('sliders.store')
+                                $route = isset($edit) ? route('sliders.update', $edit->id) : route('sliders.store')
                             @endphp
 
                             <form method="POST" action="{{ $route }}">
                                 @csrf
                                 @isset($edit)
                                     @method('put')
-
-                                    <input type="hidden" value="{{ old('r') ? old('r') : (@$r ? $r : url()->previous() )}}"
-                                           name="r">
-
+                                    <input type="hidden" value="{{ old('r') ? old('r') : (@$r ? $r : url()->previous() )}}" name="r">
                                 @endisset
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -65,6 +61,28 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="text">{{ __('Text') }}</label>
+                                    <input type="text" class="form-control" name="text" id="text"
+                                           value="{{ isset($edit) ? $edit->text : old('text') }}"
+                                           placeholder="{{__('Text')}}">
+                                    @if ($errors->has('text'))
+                                        <div class="invalid-feedback">
+                                            <p>{{ $errors->first('text') }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label for="button_text">{{ __('Button Text') }}</label>
+                                    <input type="text" class="form-control" name="button_text" id="button_text"
+                                           value="{{ isset($edit) ? $edit->button_text : old('button_text') }}"
+                                           placeholder="{{__('Button Text')}}">
+                                    @if ($errors->has('button_text'))
+                                        <div class="invalid-feedback">
+                                            <p>{{ $errors->first('button_text') }}</p>
+                                        </div>
+                                    @endif
+                                </div>
                                 @php
                                     $size = addon_is_activated('ishopet') ? __('726X350') : __('970x400');
                                 @endphp
@@ -88,11 +106,10 @@
                                             <div class="mt-2 gallery gallery-md d-flex">
                                                 <div class="selected-media mr-2 mb-2 mt-3 ml-0"
                                                      data-id="{{ isset($edit) ? $edit->bg_image_id : null }}">
-                                                    @if (isset($edit) && $edit->bg_image_id && array_key_exists('image_72x72',$edit->bg_image) && is_file_exists($edit->bg_image['image_72x72'], $edit->bg_image['storage']))
-                                                        <img
-                                                            src="{{ get_media($edit->bg_image['image_72x72'], $edit->bg_image['storage']) }}"
-                                                            alt=""
-                                                            class="img-thumbnail logo-profile">
+                                                    @if (isset($edit) && $edit->bg_image_id && array_key_exists('image_72x72', $edit->bg_image) && is_file_exists($edit->bg_image['image_72x72'], $edit->bg_image['storage']))
+                                                        <img src="{{ get_media($edit->bg_image['image_72x72'], $edit->bg_image['storage']) }}"
+                                                             alt=""
+                                                             class="img-thumbnail logo-profile">
                                                     @else
                                                         <img src="{{ static_asset('images/default/default-image-72x72.png') }}"
                                                              data-default="{{ static_asset('images/default/default-image-72x72.png') }}"
@@ -138,10 +155,9 @@
 
 @push('script')
     <script>
-        (function ($){
+        (function ($) {
             'use strict'
-
-            $(document).ready(function (){
+            $(document).ready(function () {
             })
         })(jQuery)
     </script>

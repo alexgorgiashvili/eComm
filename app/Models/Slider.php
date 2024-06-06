@@ -9,7 +9,7 @@ class Slider extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order','image','bg_image','image_id','bg_image_id','for_mobile','link','action_type'];
+    protected $fillable = ['order', 'image', 'bg_image', 'image_id', 'bg_image_id', 'for_mobile', 'link', 'action_type', 'text', 'button_text'];
 
     protected $appends = ['slider_bg_image'];
 

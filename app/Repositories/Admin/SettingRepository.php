@@ -179,6 +179,7 @@ class SettingRepository implements SettingInterface{
                     envWrite('PUSHER_APP_CLUSTER', settingHelper('pusher_app_cluster'));
                 endif;
             endif;
+
             return true;
     }
 

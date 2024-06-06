@@ -114,18 +114,20 @@ class AddressController extends Controller
 
     public function saveAddress(Request $request, AddressInterface $address): \Illuminate\Http\JsonResponse
     {
+      
         $request->validate([
             'name' => 'required',
-            // 'email' => 'required',
+            'last_name' => 'required',
             'phone_no' => 'required',
-            // 'country_id' => 'required',
-            // 'state_id' => 'required',
+            'personal_number' => 'required',
             'city_id' => 'required',
-            // 'postal_code' => 'required',
             'address' => 'required',
         ]);
         try {
-            $address->storeAddress($request->all());
+            // return response()->json([
+            //     'error' => $request->all()
+            // ]);
+             $store = $address->storeAddress($request->all());
             $data = [
                 'address' => 'Address Added',
                 'success' => __('Address Created Successfully'),

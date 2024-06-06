@@ -26,6 +26,8 @@ class AddressRepository implements AddressInterface {
         $request['user_id'] = authId();
         $request['country_id'] = 81;
         $request['state_id'] = 1;
+        // $request['last_name'] = $request->last_name;
+        // $request['personal_number'] = $request->personal_number;
 
 
         $country = Country::find($request['country_id']);
@@ -62,48 +64,9 @@ class AddressRepository implements AddressInterface {
             }
             else{
                 $address = Address::create($request);
-            }
-        }
-        else{
-            $addresses = session()->get('addresses');
+                // return $address;
 
-            if (array_key_exists('id',$request) && $request['id'])
-            {
-                foreach ($addresses as $key=> $session_address)
-                {
-                    if ($request['id'] == $session_address['id'])
-                    {
-                        $addresses[$key] = [
-                            'name' => $request['name'],
-                            'email' => $request['email'] ?? '',
-                            'phone_no' => $request['phone_no'],
-                            'address' => $request['address'],
-                            'address_ids' => $request['address_ids'],
-                            'country' => $request['country'] ?? '',
-                            'state' => $request['state'] ?? '',
-                            'city' => $request['city'] ?? '',
-                            'latitude' => $request['latitude'] ?? '',
-                            'postal_code' => $request['postal_code'] ?? '',
-                        ];
-                    }
-                }
             }
-            else{
-                $addresses[] = [
-                    'id' => Str::random(6),
-                    'name' => $request['name'],
-                    'email' => $request['email'] ?? '',
-                    'phone_no' => $request['phone_no'],
-                    'address' => $request['address'],
-                    'address_ids' => $request['address_ids'],
-                    'country' => $request['country'] ?? '',
-                    'state' => $request['state'] ?? '',
-                    'city' => $request['city'] ?? '',
-                    'latitude' => $request['latitude'] ?? '',
-                    'postal_code' => $request['postal_code'] ?? '',
-                ];
-            }
-            session()->put('addresses', $addresses);
         }
 
 

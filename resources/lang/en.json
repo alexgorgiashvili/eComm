@@ -1,4 +1,14 @@
 {
+    "enter_phone_recover_password":"enter phone number to recover password",
+    "passwords_do_not_match": "passwords do not match",
+    "ent_pass": "Password",
+    "repeat_pass": "Confirm Password",
+    "Please Type New Password":"Please Type New Password",
+    "enter_phone_no": "Enter Phone Number",
+    "password_changed":"Password changed successfully",
+    "personal_number":"Personal Number",
+    
+
     "Version": "Version",
     "you_have_total": "You Have Total",
     "edit": "Edit",
@@ -1945,7 +1955,7 @@
     "price_details": "Price Details",
     "proceed_to_checkout": "Proceed To Checkout",
     "no_category_founds": "No Category Founds",
-    "choose_a_way_to_collect_order": "How To Collect Orders?",
+    "choose_a_way_to_collect_order": "Order address",
     "use_shipping_billing_addresses": "Use Shipping Billing Addresses",
     "use_pickHub_point": "Use PickHub Point",
     "pickHub_point": "PickHub Point",

@@ -19,22 +19,23 @@
                       <div class="text">
                         <ul class="global-list">
                           <li>{{ lang.name }}: {{ address.name }}</li>
-                          <li>{{ lang.email }}: {{ address.email }}</li>
+                          <li>{{ lang.last_name }}: {{ address.last_name }}</li>
+                          <li>{{ lang.personal_number }}: {{ address.personal_number }}</li>
                           <li>{{ lang.phone }}: {{ address.phone_no }}</li>
-                          <li>{{ lang.street_address }}: {{ address.state }}</li>
                           <li>{{ lang.city }}: {{ address.city }}</li>
-                          <li>{{ lang.country }}: {{ address.country }}</li>
+                          <li>{{ lang.address }}: {{ address.address }}</li>
                         </ul>
                       </div>
                       <div class="dropdown float-right">
-                        <span class="mdi mdi-name mdi-dots-vertical dropbtn"></span>
+                        <!-- <span class="mdi mdi-name mdi-dots-vertical dropbtn"  aria-label="More options" ></span> -->
+                        <button class="dropbtn mdi mdi-dots-vertical" aria-label="More options" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-content">
                           <a href="javascript:void(0)"
                              @click="$refs.address_form.edit(address)">{{ lang.edit }}</a>
                           <a href="javascript:void(0)" v-if="!address.default_shipping"
                              @click="makeDefault(address.id, 'shipping')">{{ lang.make_default_shipping }}</a>
-                          <a href="javascript:void(0)" v-if="!address.default_billing"
-                             @click="makeDefault(address.id, 'billing')">{{ lang.make_default_billing }}</a>
+                          <!-- <a href="javascript:void(0)" v-if="!address.default_billing"
+                             @click="makeDefault(address.id, 'billing')">{{ lang.make_default_billing }}</a> -->
                           <a href="javascript:void(0)"
                              v-if="!address.default_shipping && !address.default_billing"
                              @click="$refs.address_form.deleteAddress(address.id)">{{ lang.delete }}</a>
@@ -42,16 +43,16 @@
                       </div>
                     </div>
                     <div class="d-flex">
-                      <div class="default-batch"
+                      <!-- <div class="default-batch"
                            v-if="address.default_shipping && address.default_billing">
                         {{ lang.default_shipping_billing }}
-                      </div>
-                      <div class="default-batch" v-else-if="address.default_shipping">
+                      </div> -->
+                      <div class="default-batch" v-if="address.default_shipping">
                         {{ lang.default_shipping }}
                       </div>
-                      <div class="default-batch" v-else-if="address.default_billing">
+                      <!-- <div class="default-batch" v-else-if="address.default_billing">
                         {{ lang.default_billing }}
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>

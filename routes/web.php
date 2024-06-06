@@ -59,6 +59,9 @@ Route::middleware(['XSS', 'isInstalled'])->group(function () {
         Route::get('reset/{email}/{activationCode}', [HomeController::class, 'index']);
         Route::post('create-new-password', [UserController::class, 'createNewPassword'])->name('create.new.password');
         Route::post('register/by-phone', [RegisterController::class, 'registerByPhone'])->name('register.by.phone');
+        Route::post('reset-pass-otp', [RegisterController::class, 'resetPassOtp'])->name('reset.by.otp.send');
+        Route::post('check-otp', [RegisterController::class, 'checkOTP'])->name('check.otp');
+        Route::post('reset-pass-by-phone', [RegisterController::class, 'resetPassByPhone'])->name('reset.by.phone');
 
         Route::get('seller/login', [LoginController::class, 'sellerLogin'])->name('seller.login.form');
         Route::get('admin/login', [LoginController::class, 'adminLogin'])->name('admin.login.form');
@@ -117,7 +120,7 @@ Route::middleware(['XSS', 'isInstalled'])->group(function () {
             Route::get('reward-history', [RewardSystemController::class, 'rewardHistory'])->name('convert.reward.history');
             Route::get('affiliate-links', [AffiliateController::class, 'affiliateLinks'])->name('affiliate.links');
 
-//            Route::get('coupon-lists', [UserController::class, 'couponList'])->name('convert.reward.history');
+            // Route::get('coupon-lists', [UserController::class, 'couponList'])->name('convert.reward.history');
         });
 
         //notification

@@ -99,6 +99,7 @@ namespace App\Models{
  * @property int $id
  * @property int $user_id
  * @property string $name
+ * @property int|null $personal_number
  * @property string $email
  * @property string|null $phone_no
  * @property string $address
@@ -130,6 +131,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Address whereLatitude($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Address whereLongitude($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Address whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address wherePersonalNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Address wherePhoneNo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Address wherePostalCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Address whereState($value)
@@ -1381,13 +1383,9 @@ namespace App\Models{
 /**
  * App\Models\CourierCity
  *
- * @property int $id
- * @property string $name
  * @method static \Illuminate\Database\Eloquent\Builder|CourierCity newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CourierCity newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CourierCity query()
- * @method static \Illuminate\Database\Eloquent\Builder|CourierCity whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CourierCity whereName($value)
  */
 	class CourierCity extends \Eloquent {}
 }
@@ -1785,6 +1783,8 @@ namespace App\Models{
  * @property int $id
  * @property int|null $seller_id seller user id
  * @property int|null $user_id customer
+ * @property int|null $gg_order_id
+ * @property int|null $gg_status
  * @property int|null $delivery_hero_id from delivery hero table
  * @property array|null $billing_address
  * @property array|null $shipping_address
@@ -1863,6 +1863,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeliveryStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeliveryViewed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGgOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGgStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsCancelled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsCouponSystemActive($value)
@@ -1901,6 +1903,7 @@ namespace App\Models{
  * @property int $id
  * @property int $order_id
  * @property int $product_id
+ * @property int|null $tr_tracking
  * @property string|null $variation
  * @property float|null $price
  * @property float|null $tax
@@ -1935,6 +1938,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetail whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetail whereShippingCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetail whereTax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderDetail whereTrTracking($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetail whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetail whereVariation($value)
  */
@@ -3118,6 +3122,8 @@ namespace App\Models{
  * @property int|null $bg_image_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $text
+ * @property string|null $button_text
  * @property-read \App\Models\Media|null $bgImage
  * @property-read \App\Models\Blog|null $blog
  * @property-read \App\Models\Brand|null $brand
@@ -3129,12 +3135,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereActionType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereBgImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereBgImageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slider whereButtonText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereForMobile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slider whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slider whereUpdatedAt($value)
  */
 	class Slider extends \Eloquent {}

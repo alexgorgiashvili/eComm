@@ -40,6 +40,7 @@
     <meta property="og:image" content="{{ $meta['meta_image'] }}"/>
     <meta property="og:image:size" content="300"/>
     <!-- END Open Graph -->
+    <meta name="facebook-domain-verification" content="5zzaflen5gehpu28njum415zfka7y2" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary"/>

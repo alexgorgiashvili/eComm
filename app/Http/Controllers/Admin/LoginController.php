@@ -86,17 +86,6 @@ class LoginController extends Controller
 
             // $sms_template   = $sms_templates->where('tab_key','login')->first();
             $otp            = rand(10000,99999);
-            // $sms_body       = str_replace('{otp}', $otp, $sms_template->sms_body);
-            // if (addon_is_activated('otp_system')):
-                // $query = $this->send($request->phone, $sms_body, @$sms_template->template_id);
-                // $query = true;
-                // if (is_string($query))
-                // {
-                //     return response()->json([
-                //         'error' => __('Something went wrong')
-                //     ]);
-                // }
-                // if ($query):
                     $user->otp  = $otp;
                     $user->save();
                     return response()->json([
@@ -121,23 +110,24 @@ class LoginController extends Controller
 
     public function postlogin(Request $request, ProductInterface $product, WishlistInterface $wishlist, CartInterface $cart)
     {
+        
         try {
-            if (settingHelper('is_recaptcha_activated') == 1 && !$request->has('phone') && !$request->captcha) {
-                return response()->json([
-                    'captcha' => __('Recaptcha Verification is Required')
-                ]);
-            }
+          
+           
             $phone = '';
             $user = null;
 
             if($request->phone):
                 $phone = str_replace(' ','',$request->phone);
             endif;
-            if ($request->has('email') && $request->email != ''):
-                $user = User::where('email', $request->email)->first();
-            elseif ($request->has('phone') && $phone != ''):
+        
+            if ($request->has('phone') && $phone != ''):
                 $user = User::where('phone', $phone)->first();
             endif;
+
+            // return response()->json([
+            //     'error' => $user->password,
+            // ]);
 
             if (blank($user)):
                 return response()->json([
@@ -163,15 +153,6 @@ class LoginController extends Controller
                 ]);
             endif;
 
-
-            // if ($request->has('otp') && settingHelper('disable_otp_verification') != 1):
-            //     if ($user->otp != $request->otp):
-            //         return response()->json([
-            //             'error' => __("OTP did not match. Please provide correct OTP")
-            //         ]);
-            //     endif;
-            // endif;
-
             if ($user->status == 0):
                 return response()->json([
                     'error' => __('Your account status is inactive')
@@ -182,21 +163,18 @@ class LoginController extends Controller
                 ]);
             endif;
 
-            if ($request->has('email')):
-                if (!Hash::check($request->get('password'), $user->password)):
-                    return response()->json([
-                        'error' => __('Invalid Credentials')
-                    ]);
-                endif;
-                $credentials = ['email' => $request->email, 'password' => $request->password];
-            endif;
 
-            $remember_me = $request->remember == 1 ? 1 : 0;
             try {
                 if ($request->has('phone')):
-                    $remember_me ? Sentinel::authenticateAndRemember($credentials) : Sentinel::authenticate($user);
-                else:
-                    $remember_me ? Sentinel::authenticateAndRemember($credentials) : Sentinel::authenticate($credentials);
+                    if (!Hash::check($request->get('password'), $user->password)):
+                        return response()->json([
+                            'error' => __('Invalid Credentials')
+                        ]);
+                    endif;
+                 
+                    $remember_me = $request->remember == 1 ? 1 : 0;
+
+                    $remember_me ? Sentinel::authenticateAndRemember($user) : Sentinel::authenticate($user);
                 endif;
 
                 $this->generalFunction($cart);
@@ -234,6 +212,9 @@ class LoginController extends Controller
             ]);
         }
     }
+
+
+
 
     protected function generalFunction($cart, $remove = false)
     {

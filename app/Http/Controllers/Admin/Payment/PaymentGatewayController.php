@@ -24,16 +24,16 @@ class PaymentGatewayController extends Controller
         return view('admin.settings.payment-gateway.index');
     }
 
-    public function paymentUpdate(PaymentGatewayRequest $request)
+    public function paymentUpdate(Request $request)
     {
-        if (isDemoServer()):
-            Toastr::info(__('This function is disabled in demo server.'));
-            return redirect()->back();
-        endif;
+
 
         DB::beginTransaction();
         try {
-            $this->settings->update($request);
+            
+            $test = $this->settings->update($request);
+
+            // return $test;
             Toastr::success(__('Payment Methods Updated Successfully'));
             DB::commit();
             return redirect()->back()->withInput();

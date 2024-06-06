@@ -14,6 +14,8 @@ interface BrandInterface
 
     public function store($request);
 
+    public function storeHttp($request);
+
     public function update($request);
 
     public function statusChange($request);

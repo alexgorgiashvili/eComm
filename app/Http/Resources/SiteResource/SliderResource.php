@@ -12,6 +12,8 @@ class SliderResource extends JsonResource
             'id'                => $this->id,
             'link'              => $this->link,
             'slider_bg_image'   => $this->slider_bg_image,
+            'text'              => $this->text,         // Added text field
+            'button_text'       => $this->button_text,  // Added button_text field
         ];
     }
 }

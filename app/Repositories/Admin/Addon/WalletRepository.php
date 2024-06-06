@@ -81,18 +81,18 @@ class WalletRepository implements WalletInterface
             })->paginate($limit);
     }
 
-    public function manageDeliveredOrder($order)
-    {
-        $this->calculateCommission($order);
-        if ($order->deliveryHero):
-            $this->deliveryHeroCommissionStore($order);
-        endif;
-        if (addon_is_activated('reward')):
-            $reward_repo = new RewardSystemRepository();
+    // public function manageDeliveredOrder($order)
+    // {
+    //     $this->calculateCommission($order);
+    //     if ($order->deliveryHero):
+    //         $this->deliveryHeroCommissionStore($order);
+    //     endif;
+    //     if (addon_is_activated('reward')):
+    //         $reward_repo = new RewardSystemRepository();
 
-            $reward_repo->createReward($order);
-        endif;
-    }
+    //         $reward_repo->createReward($order);
+    //     endif;
+    // }
     public function managePlacedOrder($order, $data)
     {
         $this->insertPayment($order, $data);
@@ -102,15 +102,15 @@ class WalletRepository implements WalletInterface
         $this->removePayment($order, 'order_canceled');
     }
 
-    public function sellerBalanceStore($data, $source,$seller_earning)
-    {
-        $user           = new UserRepository();
-        $seller         = $user->get($data['user_id']);
+    // public function sellerBalanceStore($data, $source,$seller_earning)
+    // {
+    //     $user           = new UserRepository();
+    //     $seller         = $user->get($data['user_id']);
 
-        $seller->balance += $seller_earning;
-        $seller->save();
-        $this->store($data);
-    }
+    //     $seller->balance += $seller_earning;
+    //     $seller->save();
+    //     $this->store($data);
+    // }
 
     public function customerBalanceStore($data, $source)
     {
@@ -125,49 +125,49 @@ class WalletRepository implements WalletInterface
         $this->store($data);
     }
 
-    public function deliveryHeroCommissionStore($order)
-    {
-        //get hero
-        $delivery_hero  = $order->deliveryHero;
-        //get user
-        if (!blank($delivery_hero)):
-            $user           = $delivery_hero->user;
+    // public function deliveryHeroCommissionStore($order)
+    // {
+    //     //get hero
+    //     $delivery_hero  = $order->deliveryHero;
+    //     //get user
+    //     if (!blank($delivery_hero)):
+    //         $user           = $delivery_hero->user;
 
-            if(settingHelper('delivery_hero_payment_type') == 'delivery_hero_commission' || settingHelper('delivery_hero_payment_type') == 'salary_and_commission'):
+    //         if(settingHelper('delivery_hero_payment_type') == 'delivery_hero_commission' || settingHelper('delivery_hero_payment_type') == 'salary_and_commission'):
 
-                $delivery_hero->total_commission += $delivery_hero->commission;
+    //             $delivery_hero->total_commission += $delivery_hero->commission;
 
-                //delivery_hero_commission record
-                $delivery_hero_account                      = new DeliveryHeroAccount();
-                $delivery_hero_account->order_id            = $order->id;
-                $delivery_hero_account->delivery_hero_id    = $delivery_hero->id;
-                $delivery_hero_account->source              = 'delivery_hero_commission';
-                $delivery_hero_account->type                = 'income';
-                $delivery_hero_account->amount              = $delivery_hero->commission;
-                $delivery_hero_account->save();
+    //             //delivery_hero_commission record
+    //             $delivery_hero_account                      = new DeliveryHeroAccount();
+    //             $delivery_hero_account->order_id            = $order->id;
+    //             $delivery_hero_account->delivery_hero_id    = $delivery_hero->id;
+    //             $delivery_hero_account->source              = 'delivery_hero_commission';
+    //             $delivery_hero_account->type                = 'income';
+    //             $delivery_hero_account->amount              = $delivery_hero->commission;
+    //             $delivery_hero_account->save();
 
-            endif;
+    //         endif;
 
-            if($order->payment_type == 'cash_on_delivery' && $order->payment_status == 'unpaid') :
-                //delivery_hero_commission record
-                $delivery_hero_account                      = new DeliveryHeroAccount();
-                $delivery_hero_account->order_id            = $order->id;
-                $delivery_hero_account->delivery_hero_id    = $delivery_hero->id;
-                $delivery_hero_account->source              = 'cod_collected';
-                $delivery_hero_account->type                = 'income';
-                $delivery_hero_account->amount              = $order->total_payable;
-                $delivery_hero_account->save();
+    //         if($order->payment_type == 'cash_on_delivery' && $order->payment_status == 'unpaid') :
+    //             //delivery_hero_commission record
+    //             $delivery_hero_account                      = new DeliveryHeroAccount();
+    //             $delivery_hero_account->order_id            = $order->id;
+    //             $delivery_hero_account->delivery_hero_id    = $delivery_hero->id;
+    //             $delivery_hero_account->source              = 'cod_collected';
+    //             $delivery_hero_account->type                = 'income';
+    //             $delivery_hero_account->amount              = $order->total_payable;
+    //             $delivery_hero_account->save();
 
-                $user->balance                              += $order->total_payable;
-                $delivery_hero->total_collection            += $order->total_payable;
-                $order->payment_status                      = 'paid';
-            endif;
+    //             $user->balance                              += $order->total_payable;
+    //             $delivery_hero->total_collection            += $order->total_payable;
+    //             $order->payment_status                      = 'paid';
+    //         endif;
 
-            $user->save();
-            $delivery_hero->save();
-            $order->save();
-        endif;
-    }
+    //         $user->save();
+    //         $delivery_hero->save();
+    //         $order->save();
+    //     endif;
+    // }
 
     public function adminBalanceStore($data, $source)
     {

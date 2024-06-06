@@ -40,10 +40,6 @@ class SliderController extends Controller
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-        if (isDemoServer()):
-            Toastr::info(__('This function is disabled in demo server.'));
-            return redirect()->back();
-        endif;
 
         DB::beginTransaction();
         try {
@@ -85,10 +81,6 @@ class SliderController extends Controller
     public function update(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
 
-        if (isDemoServer()):
-            Toastr::info(__('This function is disabled in demo server.'));
-            return redirect()->back();
-        endif;
         DB::beginTransaction();
         try {
             $this->slider->update($request->all(), $id);

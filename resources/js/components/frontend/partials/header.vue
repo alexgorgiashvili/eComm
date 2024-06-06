@@ -4,7 +4,7 @@
 			<img :src="settings.top_bar_banner" alt="banner Image" />
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span class="mdi mdi-close mdi-15px" @click="topBanner"></span></button>
 		</div>
-		<div class="sg-topbar">
+		<!-- <div class="sg-topbar">
 			<div class="container">
 				<div class="topbar-content">
 					<div class="left-content">
@@ -49,15 +49,15 @@
 									{{ lang.be_a_seller }}
 								</router-link>
 							</li>
-              <li v-if="addons.includes('affiliate')" >
-                <router-link
-                    :to="{
-										name: 'affiliate.program',
-									}"
-                >
-                  <span class="mdi mdi-name mdi-bank"></span> Affiliate Program
-                </router-link>
-              </li>
+							<li v-if="addons.includes('affiliate')" >
+								<router-link
+									:to="{
+														name: 'affiliate.program',
+													}"
+								>
+								<span class="mdi mdi-name mdi-bank"></span> Affiliate Program
+								</router-link>
+							</li>
 						</ul>
 					</div>
 					<div class="right-content new-list">
@@ -83,9 +83,8 @@
 							</li>
 						</ul>
 					</div>
-				</div> </div
-			><!-- /.container -->
-		</div>
+				</div> </div>
+		</div> -->
 
 		<div :class="addons.includes('ishopet') ? toggleNavClass() : ''" id="middle_nav" class="header-middle">
 			<div class="container">
@@ -113,41 +112,8 @@
 							<sidebar_categories v-if="addons.includes('ishopet')" ref="sidebar_category" :home="true"></sidebar_categories>
 						</div>
 						<router-link :to="{ name: 'home' }">
-							<svg v-if="settings.demo_mode" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 425.95 161.53" style="enable-background: new 0 0 425.95 161.53" xml:space="preserve">
-								<path
-									class="st0"
-									d="M103.23,45.6c-14.37,48.11-40.59,89.7-70.83,115.93H0c11.36-9.86,21.21-19.54,29.9-29.23L11.86,45.6h30.4
-                                                l8.85,58.3C61.81,86.36,69.32,67.49,74.5,45.6H103.23z"
-								/>
-								<path
-									class="st0"
-									d="M104.07,95.88c-0.33-31.91,19.38-52.95,50.11-52.95c26.39,0,42.43,15.7,42.6,39.76
-                                                c0.33,31.74-18.71,53.12-50.78,53.12C119.6,135.81,104.23,119.94,104.07,95.88z M168.04,84.19c0-10.52-5.68-17.21-15.54-17.21
-                                                c-11.53,0-19.71,10.52-19.71,27.4c0,10.36,5.01,17.37,15.53,17.37C159.86,111.75,168.04,101.56,168.04,84.19z"
-								/>
-								<path
-									class="st0"
-									d="M205.96,95.88c-0.33-31.91,19.38-52.95,50.11-52.95c26.39,0,42.43,15.7,42.6,39.76
-                                                c0.33,31.74-18.71,53.12-50.78,53.12C221.49,135.81,206.12,119.94,205.96,95.88z M269.94,84.19c0-10.52-5.68-17.21-15.54-17.21
-                                                c-11.53,0-19.71,10.52-19.71,27.4c0,10.36,5.01,17.37,15.53,17.37C261.75,111.75,269.94,101.56,269.94,84.19z"
-								/>
-								<path
-									class="st0"
-									d="M376.5,43.93l-4.34,27.73c-2-0.84-5.18-1-8.02-1c-6.18,0-15.87,2.84-21.38,12.53l-7.85,50.11h-28.56l13.86-87.7
-                                                h23.89l0.67,8.52c7.68-8.02,15.54-11.19,24.22-11.19C371.66,42.93,374.83,43.26,376.5,43.93z"
-								/>
-								<path
-									class="st0"
-									d="M378.67,110.58l10.36-64.98h28.56l-9.85,62.64c-0.84,3.84,0.5,5.51,3.84,5.51c1.5,0,2.84-0.17,4.01-0.67
-                                                l-3.17,20.55c-5.35,1.34-9.86,2-15.03,2C380.68,135.64,376,127.79,378.67,110.58z"
-								/>
-								<path
-									class="st1"
-									d="M390.2,17.21C390.2,5.85,398.22,0,409.24,0c10.02,0,16.7,5.18,16.7,14.53c0,11.69-8.02,17.04-19.04,17.04
-                                                C397.05,31.57,390.2,26.56,390.2,17.21z"
-								/>
-							</svg>
-							<img v-else :src="settings.dark_logo" alt="Logo" class="img-fluid" />
+
+							<img :src="settings.dark_logo" alt="Logo" class="img-fluid" />
 						</router-link>
 					</div>
 					<div class="sg-search">
@@ -188,6 +154,20 @@
 					</div>
 					<div class="user-option">
 						<ul class="global-list user-shop-option">
+
+							<li v-if="settings.language_switcher != 0">
+
+									<div class="dropdown">
+										<button class="dropdown-toggle" type="button" @click.stop="languageDropdown" :class="{ show: language_dropdown }" data-bs-toggle="dropdown" aria-expanded="false">{{ activeLanguage.name }} </button>
+										<ul @click.stop class="dropdown-menu" :class="{ show: language_dropdown }" aria-labelledby="">
+											<li v-for="(language, index) in languages" :key="index">
+												<a class="dropdown-item" @click="changeLanguage(language.locale)" href="javascript:void(0)"><img :src="language.flag_image" alt="flag" class="img-fluid" />{{ language.name }}</a>
+											</li>
+										</ul>
+									</div>
+
+							</li>
+							
 							<li>
 								<router-link :to="{ name: 'wishlist' }" v-if="authUser && authUser.user_type == 'customer'">
 									<div class="icon"
@@ -196,7 +176,7 @@
 									</div>
 									<span class="badge" v-if="wishlists > 0">{{ wishlists }}</span>
 								</router-link>
-                <a href="javascript:void(0)" v-else>
+                				<a href="javascript:void(0)" v-else>
 									<div class="icon"
 										><img alt="Compare Icon" class="img-fluid" :src="getUrl('public/images/others/wishlist.svg')" />
 										<!---->
@@ -250,7 +230,7 @@
 								</router-link>
 							</li>
 
-							<li class="d-flex user-log-info">
+							<!-- <li class="d-flex user-log-info">
 								<a :href="'tel:' + settings.header_contact_phone" class="live-chat">
 									<div class="icon"
 										><span><img alt="Phone Icon" class="img-fluid" :src="getUrl('public/images/others/phone.svg')" /></span
@@ -268,7 +248,16 @@
 									<router-link class="d-block" :to="{ name: 'login' }">{{ lang.sign_in }}</router-link>
 									<router-link :to="{ name: 'register' }">{{ lang.register }}</router-link>
 								</div>
+							</li> -->
+							<li class="d-flex user-log-info"  v-if="authUser && (authUser.user_type == 'admin' || authUser.user_type == 'staff')">
+								<div class="text-left text">
+									<a class="d-block" :href="getUrl('admin/dashboard')">{{ lang.dashboard }}</a>
+									<a href="javascript:void(0)" @click="logout"> {{ lang.logout }}</a>
+								</div>
+								
 							</li>
+
+
 						</ul>
 					</div>
 				</div>
@@ -356,41 +345,7 @@
 			<div class="categorie-menu-content">
 				<div class="sg-logo">
 					<router-link :to="{ name: 'home' }">
-						<svg v-if="settings.demo_mode" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 425.95 161.53" style="enable-background: new 0 0 425.95 161.53" xml:space="preserve">
-							<path
-								class="st0"
-								d="M103.23,45.6c-14.37,48.11-40.59,89.7-70.83,115.93H0c11.36-9.86,21.21-19.54,29.9-29.23L11.86,45.6h30.4
-                                                l8.85,58.3C61.81,86.36,69.32,67.49,74.5,45.6H103.23z"
-							/>
-							<path
-								class="st0"
-								d="M104.07,95.88c-0.33-31.91,19.38-52.95,50.11-52.95c26.39,0,42.43,15.7,42.6,39.76
-                                                c0.33,31.74-18.71,53.12-50.78,53.12C119.6,135.81,104.23,119.94,104.07,95.88z M168.04,84.19c0-10.52-5.68-17.21-15.54-17.21
-                                                c-11.53,0-19.71,10.52-19.71,27.4c0,10.36,5.01,17.37,15.53,17.37C159.86,111.75,168.04,101.56,168.04,84.19z"
-							/>
-							<path
-								class="st0"
-								d="M205.96,95.88c-0.33-31.91,19.38-52.95,50.11-52.95c26.39,0,42.43,15.7,42.6,39.76
-                                                c0.33,31.74-18.71,53.12-50.78,53.12C221.49,135.81,206.12,119.94,205.96,95.88z M269.94,84.19c0-10.52-5.68-17.21-15.54-17.21
-                                                c-11.53,0-19.71,10.52-19.71,27.4c0,10.36,5.01,17.37,15.53,17.37C261.75,111.75,269.94,101.56,269.94,84.19z"
-							/>
-							<path
-								class="st0"
-								d="M376.5,43.93l-4.34,27.73c-2-0.84-5.18-1-8.02-1c-6.18,0-15.87,2.84-21.38,12.53l-7.85,50.11h-28.56l13.86-87.7
-                                                h23.89l0.67,8.52c7.68-8.02,15.54-11.19,24.22-11.19C371.66,42.93,374.83,43.26,376.5,43.93z"
-							/>
-							<path
-								class="st0"
-								d="M378.67,110.58l10.36-64.98h28.56l-9.85,62.64c-0.84,3.84,0.5,5.51,3.84,5.51c1.5,0,2.84-0.17,4.01-0.67
-                                                l-3.17,20.55c-5.35,1.34-9.86,2-15.03,2C380.68,135.64,376,127.79,378.67,110.58z"
-							/>
-							<path
-								class="st1"
-								d="M390.2,17.21C390.2,5.85,398.22,0,409.24,0c10.02,0,16.7,5.18,16.7,14.53c0,11.69-8.02,17.04-19.04,17.04
-                                                C397.05,31.57,390.2,26.56,390.2,17.21z"
-							/>
-						</svg>
-						<img v-else :src="settings.dark_logo" alt="Logo" class="img-fluid" />
+						<img  :src="settings.dark_logo" alt="Logo" class="img-fluid" />
 					</router-link>
 				</div>
 
@@ -414,41 +369,8 @@
       <div class="categorie-menu-content">
         <div class="sg-logo">
           <router-link :to="{ name: 'home' }">
-            <svg v-if="settings.demo_mode" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 425.95 161.53" style="enable-background: new 0 0 425.95 161.53" xml:space="preserve">
-							<path
-                  class="st0"
-                  d="M103.23,45.6c-14.37,48.11-40.59,89.7-70.83,115.93H0c11.36-9.86,21.21-19.54,29.9-29.23L11.86,45.6h30.4
-                                                l8.85,58.3C61.81,86.36,69.32,67.49,74.5,45.6H103.23z"
-              />
-              <path
-                  class="st0"
-                  d="M104.07,95.88c-0.33-31.91,19.38-52.95,50.11-52.95c26.39,0,42.43,15.7,42.6,39.76
-                                                c0.33,31.74-18.71,53.12-50.78,53.12C119.6,135.81,104.23,119.94,104.07,95.88z M168.04,84.19c0-10.52-5.68-17.21-15.54-17.21
-                                                c-11.53,0-19.71,10.52-19.71,27.4c0,10.36,5.01,17.37,15.53,17.37C159.86,111.75,168.04,101.56,168.04,84.19z"
-              />
-              <path
-                  class="st0"
-                  d="M205.96,95.88c-0.33-31.91,19.38-52.95,50.11-52.95c26.39,0,42.43,15.7,42.6,39.76
-                                                c0.33,31.74-18.71,53.12-50.78,53.12C221.49,135.81,206.12,119.94,205.96,95.88z M269.94,84.19c0-10.52-5.68-17.21-15.54-17.21
-                                                c-11.53,0-19.71,10.52-19.71,27.4c0,10.36,5.01,17.37,15.53,17.37C261.75,111.75,269.94,101.56,269.94,84.19z"
-              />
-              <path
-                  class="st0"
-                  d="M376.5,43.93l-4.34,27.73c-2-0.84-5.18-1-8.02-1c-6.18,0-15.87,2.84-21.38,12.53l-7.85,50.11h-28.56l13.86-87.7
-                                                h23.89l0.67,8.52c7.68-8.02,15.54-11.19,24.22-11.19C371.66,42.93,374.83,43.26,376.5,43.93z"
-              />
-              <path
-                  class="st0"
-                  d="M378.67,110.58l10.36-64.98h28.56l-9.85,62.64c-0.84,3.84,0.5,5.51,3.84,5.51c1.5,0,2.84-0.17,4.01-0.67
-                                                l-3.17,20.55c-5.35,1.34-9.86,2-15.03,2C380.68,135.64,376,127.79,378.67,110.58z"
-              />
-              <path
-                  class="st1"
-                  d="M390.2,17.21C390.2,5.85,398.22,0,409.24,0c10.02,0,16.7,5.18,16.7,14.53c0,11.69-8.02,17.04-19.04,17.04
-                                                C397.05,31.57,390.2,26.56,390.2,17.21z"
-              />
-						</svg>
-            <img v-else :src="settings.dark_logo" alt="Logo" class="img-fluid" />
+
+            <img :src="settings.dark_logo" alt="Logo" class="img-fluid" />
           </router-link>
         </div>
         <ul @click.stop class="global-list">
@@ -842,3 +764,42 @@ export default {
 	},
 };
 </script>
+<style scoped>
+.user-option .dropdown button {
+	border: 0;
+	background-color: transparent;
+	font-size: 13px;
+	color: var(--theme-color);
+}
+
+.user-option .dropdown-menu {
+	min-width: 110px;
+	display: none;
+}
+
+.user-option .dropdown-menu li {
+	margin-right: 0;
+	margin-inline-end: 28px !important;
+}
+
+.user-option .dropdown-menu li img {
+	margin-right: 8px;
+}
+
+.user-option .dropdown-menu li a {
+	display: block;
+	font-size: 12px;
+}
+
+.user-option ul li {
+	margin-inline-end: 13.2px;
+	display: flex;
+	font-size: 13px;
+}
+
+.user-option ul li a {
+	align-self: center;
+	font-size: 13px;
+}
+
+</style>

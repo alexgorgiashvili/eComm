@@ -87,7 +87,14 @@
                 </a>
               </div>
             </div>
-
+            <div class="col-lg-12" v-if="profileOrders && profileOrders.total > 0">
+              <div class="sg-table">
+                <div class="title justify-content-between">
+                  <h1>{{ lang.order_history }}</h1>
+                </div>
+                <orders :orders="profileOrders.data" :user_dashboard="false"></orders>
+              </div>
+            </div>
             <div class="sg-shipping" v-if="authUser">
               <div class="row">
                 <div class="col-md-6">
@@ -99,45 +106,20 @@
                       <div class="text">
                         <ul class="global-list">
                           <li>{{ lang.name }}: {{ default_shipping.name }}</li>
-                          <li>{{ lang.email }}: {{ default_shipping.email }}</li>
+                          <li>{{ lang.last_name }}: {{ default_shipping.last_name }}</li>
+                          <li>{{ lang.personal_number }}: {{ default_shipping.personal_number }}</li>
                           <li>{{ lang.phone }}: {{ default_shipping.phone_no }}</li>
-                          <li>{{ lang.street_address }}: {{ default_shipping.default_shipping }}</li>
                           <li>{{ lang.city }}: {{ default_shipping.city }}</li>
-                          <li>{{ lang.country }}: {{ default_shipping.country }}</li>
+                          <li>{{ lang.address }}: {{ default_shipping.address }}</li>
                         </ul>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="title mt-3 mb-0 b-0">
-                    <h1>{{ lang.default_billing }}</h1>
-                  </div>
-                  <div class="sg-card address" v-if="default_billing">
-                    <div class="justify-content-between d-flex">
-                      <div class="text">
-                        <ul class="global-list">
-                          <li>{{ lang.name }}: {{ default_billing.name }}</li>
-                          <li>{{ lang.email }}: {{ default_billing.email }}</li>
-                          <li>{{ lang.phone }}: {{ default_billing.phone_no }}</li>
-                          <li>{{ lang.street_address }}: {{ default_billing.default_shipping }}</li>
-                          <li>{{ lang.city }}: {{ default_billing.city }}</li>
-                          <li>{{ lang.country }}: {{ default_billing.country }}</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </div>
-            <div class="col-lg-12" v-if="profileOrders && profileOrders.total > 0">
-              <div class="sg-table">
-                <div class="title justify-content-between">
-                  <h1>{{ lang.order_history }}</h1>
-                </div>
-                <orders :orders="profileOrders.data" :user_dashboard="false"></orders>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div><!-- /.container -->

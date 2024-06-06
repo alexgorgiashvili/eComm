@@ -182,8 +182,14 @@
 											{{ lang.add_to_cart }}
 										</a>
 									</div>
-									<div class="buyNowBTN d-flex align-items-center">
+									<!-- <div class="buyNowBTN d-flex align-items-center">
 										<a href="javascript:void(0)" @click="buyNow(productDetails.minimum_order_quantity)">
+											<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24"><path d="M10.975 8l.025-.5c0-.517-.067-1.018-.181-1.5h5.993l-.564 2h-5.273zm-2.475 10c-.828 0-1.5.672-1.5 1.5 0 .829.672 1.5 1.5 1.5s1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm11.305-15l-3.432 12h-10.428l-.455-1.083c-.323.049-.653.083-.99.083-.407 0-.805-.042-1.191-.114l1.306 3.114h13.239l3.474-12h1.929l.743-2h-4.195zm-6.305 15c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm-4.5-10.5c0 2.485-2.018 4.5-4.5 4.5-2.484 0-4.5-2.015-4.5-4.5s2.016-4.5 4.5-4.5c2.482 0 4.5 2.015 4.5 4.5zm-2-.5h-2v-2h-1v2h-2v1h2v2h1v-2h2v-1z"/></svg>
+											{{ lang.buy_now }}
+										</a>
+									</div> -->
+									<div class="buyNowBTN d-flex align-items-center">
+										<a href="javascript:void(0)" @click="addToCart(productDetails.minimum_order_quantity, 1,1)">
 											<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24"><path d="M10.975 8l.025-.5c0-.517-.067-1.018-.181-1.5h5.993l-.564 2h-5.273zm-2.475 10c-.828 0-1.5.672-1.5 1.5 0 .829.672 1.5 1.5 1.5s1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm11.305-15l-3.432 12h-10.428l-.455-1.083c-.323.049-.653.083-.99.083-.407 0-.805-.042-1.191-.114l1.306 3.114h13.239l3.474-12h1.929l.743-2h-4.195zm-6.305 15c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm-4.5-10.5c0 2.485-2.018 4.5-4.5 4.5-2.484 0-4.5-2.015-4.5-4.5s2.016-4.5 4.5-4.5c2.482 0 4.5 2.015 4.5 4.5zm-2-.5h-2v-2h-1v2h-2v1h2v2h1v-2h2v-1z"/></svg>
 											{{ lang.buy_now }}
 										</a>
@@ -276,12 +282,12 @@
 
 							<div class="social-media-icon">
 								<ul class="global-list d-flex alx">
-									<!-- <li class="fb-icon"
+									<li class="fb-icon"
 										><a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-facebook"></span></a
 									></li>
 								 <li class="tw-icon"
 										><a target="_blank" :href="'https://twitter.com/intent/tweet?text=' + productDetails.product_name + '&url=' + getUrl('product/' + productDetails.slug)"><span class="mdi mdi-name mdi-twitter"></span></a
-									></li> -->
+									></li>
 									<li class="ld-icon"
 										><a target="_blank" :href="'https://www.linkedin.com/sharing/share-offsite?mini=true&url=' + getUrl('product/' + productDetails.slug) + '&title=' + productDetails.product_name + '&summary=Extra+linkedin+summary+can+be+passed+here'"
 											><span class="mdi mdi-linkedin"></span></a
@@ -978,77 +984,115 @@ export default {
 				toastr.warning(this.lang.please_order_minimum_of + " " + this.productDetails.minimum_order_quantity + " " + this.lang.Quantity, this.lang.Warning + " !!");
 			}
 		},
+		// addToCart(min_qty, buy,is_buy_now) {
+
+
+
+		// 	if(this.productDetails.has_variant && !this.product_form.variants_ids)
+		// 	{
+		// 		return toastr.error(this.lang.please_select_all_attributes, this.lang.Error + " !!");
+		// 	}
+		// 	if(is_buy_now == 1){
+		// 		this.product_form.is_buy_now = 1
+		// 	}else{
+		// 		this.product_form.is_buy_now = 0
+		// 	}
+		// 	let carts = this.carts;
+		// 	let url = this.getUrl("user/addToCart");
+		// 	axios.post(url, this.product_form).then((response) => {
+		// 		if (response.data.error) {
+		// 			toastr.error(response.data.error, this.lang.Error + " !!");
+		// 		} else {
+		// 			toastr.success(response.data.success, this.lang.Success + " !!");
+		// 			let carts = response.data.carts;
+		// 			if (buy) {
+		// 				$("#product").modal("hide");
+		// 			}
+		// 			this.$store.dispatch("carts", carts);
+		// 			this.resetForm();
+        //   this.productDetails.product_stock.current_stock = this.productDetails.product_stock.current_stock - this.product_form.quantity;
+        //   this.product_form.quantity = min_qty;
+		// 			if (buy) {
+		// 				this.$router.push({ name: "checkout"});
+		// 			} else {
+		// 				this.added_to_cart = true;
+		// 				setTimeout(() => {
+		// 					this.added_to_cart = false;
+		// 				}, 2000);
+		// 			}
+		// 		}
+		// 	});
+		// },
 		addToCart(min_qty, buy,is_buy_now) {
 
 			if(this.productDetails.has_variant && !this.product_form.variants_ids)
 			{
-				return toastr.error(this.lang.please_select_all_attributes, this.lang.Error + " !!");
+			return toastr.error(this.lang.please_select_all_attributes, this.lang.Error + " !!");
 			}
 			if(is_buy_now == 1){
-				this.product_form.is_buy_now = 1
+			this.product_form.is_buy_now = 1
 			}else{
-				this.product_form.is_buy_now = 0
+			this.product_form.is_buy_now = 0
 			}
-			let carts = this.carts;
-			let url = this.getUrl("user/addToCart");
-			axios.post(url, this.product_form).then((response) => {
-				if (response.data.error) {
-					toastr.error(response.data.error, this.lang.Error + " !!");
-				} else {
-					toastr.success(response.data.success, this.lang.Success + " !!");
-					let carts = response.data.carts;
-					if (buy) {
-						$("#product").modal("hide");
-					}
-					this.$store.dispatch("carts", carts);
-					this.resetForm();
-          this.productDetails.product_stock.current_stock = this.productDetails.product_stock.current_stock - this.product_form.quantity;
-          this.product_form.quantity = min_qty;
-					if (buy) {
-						this.$router.push({ name: "checkout"});
+				let carts = this.carts;
+				let url = this.getUrl("user/addToCart");
+				axios.post(url, this.product_form).then((response) => {
+					if (response.data.error) {
+						toastr.error(response.data.error, this.lang.Error + " !!");
 					} else {
-						this.added_to_cart = true;
-						setTimeout(() => {
-							this.added_to_cart = false;
-						}, 2000);
+						toastr.success(response.data.success, this.lang.Success + " !!");
+						let carts = response.data.carts;
+						if (buy) {
+							$("#product").modal("hide");
+						}
+						this.$store.dispatch("carts", carts);
+						this.resetForm();
+						this.product_form.quantity = min_qty;
+						if (buy) {
+							this.$router.push({ name: "checkout"});
+						} else {
+							this.added_to_cart = true;
+							setTimeout(() => {
+								this.added_to_cart = false;
+							}, 2000);
+						}
 					}
-				}
-			});
+				});
 		},
-		buyNow(min_qty) {
-			if (this.productDetails.has_variant && !this.product_form.variants_ids) {
-				return toastr.error(this.lang.please_select_all_attributes, this.lang.Error + " !!");
-			}
+		// buyNow(min_qty) {
+		// 	if (this.productDetails.has_variant && !this.product_form.variants_ids) {
+		// 		return toastr.error(this.lang.please_select_all_attributes, this.lang.Error + " !!");
+		// 	}
 
-			// Set is_buy_now flag to 1
-			this.product_form.is_buy_now = 1;
+		// 	// Set is_buy_now flag to 1
+		// 	this.product_form.is_buy_now = 1;
 
-			let url = this.getUrl("user/addToCart");
-			axios.post(url, this.product_form).then((response) => {
-				if (response.data.error) {
-					toastr.error(response.data.error, this.lang.Error + " !!");
-				} else {
-					toastr.success(response.data.success, this.lang.Success + " !!");
-					let carts = response.data.carts;
-					this.$store.dispatch("carts", carts);
-					this.resetForm();
-					this.productDetails.product_stock.current_stock = this.productDetails.product_stock.current_stock - this.product_form.quantity;
-					this.product_form.quantity = min_qty;
+		// 	let url = this.getUrl("user/addToCart");
+		// 	axios.post(url, this.product_form).then((response) => {
+		// 		if (response.data.error) {
+		// 			toastr.error(response.data.error, this.lang.Error + " !!");
+		// 		} else {
+		// 			toastr.success(response.data.success, this.lang.Success + " !!");
+		// 			let carts = response.data.carts;
+		// 			this.$store.dispatch("carts", carts);
+		// 			this.resetForm();
+		// 			this.productDetails.product_stock.current_stock = this.productDetails.product_stock.current_stock - this.product_form.quantity;
+		// 			this.product_form.quantity = min_qty;
 
-					// Check authentication before redirecting
-					if (!this.authUser) {
-						toastr.error(this.lang.login_first, this.lang.Error + ' !!');
-						this.$store.commit('setLoginRedirection', this.$route.name);
-						this.$router.push({name: 'login'});
-					} else if (this.authUser.user_type != 'customer') {
-						toastr.warning(this.lang.you_are_not_able_topurchase_products, this.lang.Warning + ' !!');
-					} else {
-						// Redirect to checkout if authenticated
-						this.$router.push({name: 'checkout'});
-					}
-				}
-			});
-		},
+		// 			// Check authentication before redirecting
+		// 			if (!this.authUser) {
+		// 				toastr.error(this.lang.login_first, this.lang.Error + ' !!');
+		// 				this.$store.commit('setLoginRedirection', this.$route.name);
+		// 				this.$router.push({name: 'login'});
+		// 			} else if (this.authUser.user_type != 'customer') {
+		// 				toastr.warning(this.lang.you_are_not_able_topurchase_products, this.lang.Warning + ' !!');
+		// 			} else {
+		// 				// Redirect to checkout if authenticated
+		// 				this.$router.push({name: 'checkout'});
+		// 			}
+		// 		}
+		// 	});
+		// },
 
 		quantityCheck() {
 			if (this.product_form.quantity != this.firstStock.stock && this.product_form.quantity < this.firstStock.stock) {

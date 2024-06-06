@@ -3,18 +3,24 @@
 namespace App\Http\Controllers\Admin\Product;
 
 use Carbon\Carbon;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Traits\SlugTrait;
 use App\Models\ReviewReply;
 use App\Models\ProductStock;
 use Illuminate\Http\Request;
 use App\Models\ShippingClass;
 use App\Utility\VariantUtility;
+use App\Models\CategoryLanguage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Exception\ConnectException;
 use App\Repositories\Admin\VatTaxRepository;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 use App\Repositories\Interfaces\Admin\MediaInterface;
 use App\Repositories\Interfaces\Site\ReviewInterface;
 use App\Repositories\Interfaces\Admin\SellerInterface;
@@ -29,6 +35,9 @@ use App\Repositories\Interfaces\Admin\Product\AttributeInterface;
 
 class ProductController extends Controller
 {
+    use SlugTrait;
+
+
     protected $products;
     protected $categories;
     protected $brands;
@@ -82,6 +91,7 @@ class ProductController extends Controller
 
     public function storeHttp(Request $request){
         // dd('store');
+  
         Log::info(['order_start' => 'true']);
         // $order = json_decode($request->getContent(), true);
         // Log::info(['order' => 'test']);
@@ -169,39 +179,240 @@ class ProductController extends Controller
                 }
     }
 
-    public function sendHttp(Request $request){
 
-        dd('send');
-        $url = $request->url;
-        // $log = Log::info(['log' => $url]);
-        // Log::info(['result problem' => 'true']);
 
-        // return $url;
-        $task = "https://api.apify.com/v2/acts/yeyo~trendyol-scraper/runs?token=apify_api_690Mflmb0CedA2kUV2h2TKHZaEwNd32DVzwE";
-        $input = [
-                    "input" => [
-                        [ 
-                            "url" => $url,
-                    
-                        ],
-                    ],
-                    "maxItems" => 10,
-                    "proxyConfiguration" => [ "useApifyProxy" => true ],
-                ];
-            $response = Http::post($task,$input);
-            $data = json_decode($response, true);
-            // Log::info(['log' => $data]);
 
-            // dd($data);
-            if($response->successful()){
-                Toastr::success(__('Created Successfully'));
+    public function getProductDetail($productId)
+    {
+        // $response = Http::get("https://public.trendyol.com/discovery-web-productgw-service/api/productDetail/{$productId}?&culture=en-GB");
+        $response = Http::get("https://public.trendyol.com/discovery-web-productgw-service/api/productDetail/{$productId}");
 
-                return back();
-            }
-            // dd('wtf');
+        return $response->json();
+        // return json_decode($response->body(), true);
 
     }
 
+
+    // protected function saveCategories($categories, $parentId = null, $lang = 'en')
+    // {
+    //     foreach ($categories as $cat) {
+    //         // Generate a slug from the category name
+    //         $slug = $this->getSlug($cat['name']);
+    
+    //         $category = Category::firstOrCreate(
+    //             ['id' => $cat['id']],  // Use 'api_id' instead of 'id' to avoid confusion with the auto-incrementing primary key
+    //             ['parent_id' => $parentId,'slug' => $slug]
+    //         );
+    
+    //         // Save or update the language-specific data
+    //         CategoryLanguage::updateOrCreate(
+    //             ['category_id' => $category->id, 'lang' => $lang],
+    //             ['title' => $cat['name']]
+    //         );
+    
+    //         if (!empty($cat['subCategories'])) {
+    //             $this->saveCategories($cat['subCategories'], $category->id, $lang);
+    //         }
+    //     }
+    // }
+    // protected function saveCategories($categories, $parentId = null, $lang = 'en')
+    // {
+    //     foreach ($categories as $cat) {
+    //         // Generate a slug from the category name
+    //         $slug = $this->getSlug($cat['name']);
+    
+    //         $category = Category::firstOrCreate(
+    //             ['api_id' => $cat['id']],  // Use 'api_id' to identify the category uniquely
+    //             ['parent_id' => $parentId, 'slug' => $slug]
+    //         );
+    
+    //         // Set position if a parent is set
+    //         if ($parentId) {
+    //             $parent_cat = Category::where('api_id', $parentId)->first();
+    //             if ($parent_cat) {
+    //                 $category->position = $parent_cat->position + 1;
+    //                 // Handle position overflow if necessary
+    //             }
+    //         }
+    
+    //         // Update language-specific data
+    //         CategoryLanguage::updateOrCreate(
+    //             ['category_id' => $category->id, 'lang' => $lang],
+    //             ['title' => $cat['name']]
+    //         );
+    
+    //         $category->save();
+    
+    //         // Recursively save subcategories
+    //         if (!empty($cat['subCategories'])) {
+    //             $this->saveCategories($cat['subCategories'], $cat['id'], $lang); // Pass API ID as parentId
+    //         }
+    //     }
+    // }
+    function translateAndSave($sourceLang, $targetLangs)
+    {
+        $records = CategoryLanguage::where('lang', $sourceLang)->get();
+    
+        foreach ($records as $record) {
+            // Translation logic here
+            foreach ($targetLangs as $lang) {
+                    if (!CategoryLanguage::where('category_id', $record->category_id)->where('lang', $lang)->exists()) {
+                        $tr = new GoogleTranslate($lang); // Set target language
+                        $tr->setSource($sourceLang); // Set source language
+            
+                        $translatedTitle = $this->retryTranslate($tr, $record->title);
+                        if (!$translatedTitle) continue; // Skip if translation failed
+            
+                        $newRecord = $record->replicate(); // Replicate the original record
+                        $newRecord->lang = $lang; // Set new language code
+                        $newRecord->title = $translatedTitle; // Set translated title
+                        $newRecord->save(); // Save the new record
+                    }
+                }
+        }
+    }
+    
+    function retryTranslate($translator, $text, $attempts = 3)
+    {
+        for ($i = 0; $i < $attempts; $i++) {
+            try {
+                return $translator->translate($text);
+            } catch (ConnectException $e) {
+                if ($i === $attempts - 1) throw $e; // Rethrow the last exception if all retries fail
+            }
+        }
+    }
+
+    
+
+    public function sendHttp(Request $request){
+        
+        // dd($prr);
+        // $url = $request->url;
+        // $id = 447154854;
+        // $bName = $response['result']['brand']['name'];
+        $categories = Http::get('https://api.trendyol.com/sapigw/product-categories');
+        $dataCat= $categories->json();
+        // $save = $this->saveCategories($dataCat['categories']);
+        $tt = $this->translateAndSave('tr', ['en', 'ka']);
+
+        // dd('ok');
+
+        $id = $request->url;
+        $response = $this->getProductDetail($id);
+        // $dataBrand = $response->json();
+        // dd($response);
+        
+        if ($response['isSuccess']) {
+
+            // Access the result section
+            $data = $response['result'];
+
+            $brandDetails = $data['metaBrand'];
+            $brand = Brand::find($brandDetails['id']);
+            if(!$brand){
+    
+                $storeBrand = $this->brands->storeHttp($brandDetails);
+            }
+
+            $type = 'image';
+            // Check if data is an array and not empty
+            if (is_array($data) && !empty($data)) {
+                $results = [];
+                // dd($data);
+
+                $images = $data['images'] ?? [];
+
+                foreach ($images as $imageUrl) {
+                    
+
+                    $fullImageUrl = 'https://cdn.dsmcdn.com/' . ltrim($imageUrl, '/');
+                    $result = $this->medias->storeHttp($fullImageUrl, $type);
+                
+                    if (is_array($result) && isset($result['id'])) {
+                        $results[] = $result['id'];
+                    } else {
+                        $log = Log::channel('mylog')->info(['result problem' => 'bad']);
+                    }
+                    
+                }
+            }
+            
+            $priorityZeroDescriptions = array_filter($data['descriptions'], function ($description) {
+                return $description['priority'] === 0;
+            });
+    
+            // Extract just the text of descriptions to pass as an array
+            $descriptionsTexts = array_map(function ($desc) {
+                return $desc['text'];
+            }, $priorityZeroDescriptions);
+
+            $filteredData = [
+                "name" => $data['name'],
+                "category" => "11",
+                "brand" => $brandDetails['id'],
+                "unit" => "777",
+                "minimum_order_quantity" => "1",
+                "thumbnail" => $results[0], 
+                "images" => implode(',', $results),
+                "price" => $data['price']['sellingPrice']['value'],
+                "stock_visibility" => "visible_with_text",
+                // "sku" => "S42G6XKBVNA811YCQO2210",
+                "current_stock" => "500",
+                "short_description" => $descriptionsTexts,
+                "shipping_type" => "free_shipping",
+                "status" => "published"
+            ];
+            // dd($filteredData);
+            $request = new Request($filteredData);
+
+            DB::beginTransaction();
+            try {
+                
+               $req =  $this->products->storeHttp($request);
+                Toastr::success(__('Created Successfully'));
+
+         
+                DB::commit();
+                return back();
+
+            } catch (\Exception $e) {
+                // Log::channel('mylog')->error(['Product Store Error' => $e->getMessage()]);
+    
+                DB::rollBack();
+                Toastr::error($e->getMessage());
+                return back();            }
+        
+        } 
+
+
+
+    }
+
+    public function sendForScrape(){
+        // $task = "https://api.apify.com/v2/acts/yeyo~trendyol-scraper/runs?token=apify_api_690Mflmb0CedA2kUV2h2TKHZaEwNd32DVzwE";
+        // $input = [
+        //             "input" => [
+        //                 [ 
+        //                     "url" => $url,
+                    
+        //                 ],
+        //             ],
+        //             "maxItems" => 10,
+        //             "proxyConfiguration" => [ "useApifyProxy" => true ],
+        //         ];
+        //     $response = Http::post($task,$input);
+        //     $data = json_decode($response, true);
+        //     // Log::info(['log' => $data]);
+
+        //     // dd($data);
+        //     if($response->successful()){
+        //         Toastr::success(__('Created Successfully'));
+
+        //         return back();
+        //     }
+            // dd('wtf');
+    }
 
     public function index(Request $request, $status = null){
         try {
@@ -410,6 +621,7 @@ class ProductController extends Controller
             return redirect()->back();
         endif;
 
+        // dd($request->all());
         DB::beginTransaction();
         try {
             $this->products->store($request);
