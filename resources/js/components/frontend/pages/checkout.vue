@@ -20,7 +20,9 @@
               <div class="title">
                 <h1>{{ lang.choose_a_way_to_collect_order }}</h1>
               </div>
-              <div class="left-content" v-if="pick_hubs.length > 0">
+
+              
+              <!-- <div class="left-content" v-if="pick_hubs.length > 0">
                 <form class="form-checkbox">
                   <div class="form-group">
                     <input type="radio" id="address" value="2"
@@ -46,12 +48,12 @@
                     => {{ hub.address }}
                   </option>
                 </select>
-              </div>
+              </div> -->
 
-              <div v-if="addresses.length > 0 && checkout_method == 2" class="title mt-2">
+              <!-- <div v-if="addresses.length > 0 && checkout_method == 2" class="title mt-2">
                 <h1>{{ lang.shipping_address }}</h1>
-              </div>
-              <div class="row text-capitalize" v-if="addresses && checkout_method == 2">
+              </div> -->
+              <!-- <div class="row text-capitalize" v-if="addresses && checkout_method == 2">
                 <div class="col-lg-6" v-for="(address, index) in addresses" :key="index">
                   <label :id="'shipping_'+address.id" class="address_selector">
                     <div class="sg-card address chekout"
@@ -100,11 +102,14 @@
                     </label>
                   </div>
                 </div>
-              </div><!-- /.accordion -->
-              <div v-if="addresses.length > 0 && !same_address && checkout_method == 2" class="title">
+              </div> -->
+              
+              <!-- /.accordion -->
+              <!-- <div v-if="addresses.length > 0 && !same_address && checkout_method == 2" class="title">
                 <h1>{{ lang.billing_address }}</h1>
-              </div>
-              <div class="row text-capitalize" v-if="addresses && !same_address && checkout_method == 2">
+              </div> -->
+
+              <!-- <div class="row text-capitalize" v-if="addresses && !same_address && checkout_method == 2">
                 <div class="col-lg-6" v-for="(address, index) in addresses" :key="index">
                   <label :id="'billing_'+address.id" class="address_selector">
                     <div class="sg-card address chekout"
@@ -144,7 +149,7 @@
                     </div>
                   </label>
                 </div>
-              </div>
+              </div> -->
               <addressForm ref="address_form" v-if="checkout_method == 2"/>
             </div><!-- /.sg-shipping -->
           </div>

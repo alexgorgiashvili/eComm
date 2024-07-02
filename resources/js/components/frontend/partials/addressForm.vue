@@ -2,15 +2,15 @@
   <div class="accordion add-new" ref="update">
     <div class="accordion-item">
       <div class="accordion-header">
-        <button class="accordion-button" :class="{ 'collapsed' : !address_area }"
+        <!-- <button class="accordion-button" :class="{ 'collapsed' : !address_area }"
                 type="button" data-bs-toggle="collapse"
                 @click="address_area = !address_area"
                 data-bs-target="#shipping_accordion" aria-expanded="false"
                 aria-controls="collapse1">{{ address_area_title }}
-        </button>
+        </button> -->
       </div>
-      <div id="shipping_accordion" class="accordion-collapse collapse"
-           :class="{ 'show' : address_area }" aria-labelledby="address1"
+      <div id="shipping_accordion" class="accordion-collapse collapse show"
+          aria-labelledby="address1"
            data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <form @submit.prevent="saveAddress()">
@@ -100,7 +100,7 @@ export default {
   },
   data(){
     return {
-      address_area: false,
+      address_area: true,
       address_area_title : '',
       form: {
         name: '',
