@@ -1,9 +1,10 @@
 <template>
 	<header class="sg-header home-4" :class="{ 'sidebar-active': smCategory, 'mobile-menu-active': show_sm_home }">
-		<div class="sg-header-top-banner alert alert-dismissible fade show" role="alert" v-if="!is_top_banner && settings.top_bar_banner">
+		<!-- <div class="sg-header-top-banner alert alert-dismissible fade show" role="alert" v-if="!is_top_banner && settings.top_bar_banner">
 			<img :src="settings.top_bar_banner" alt="banner Image" />
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span class="mdi mdi-close mdi-15px" @click="topBanner"></span></button>
-		</div>
+		</div> -->
+		<p>changed details</p>
 		<!-- <div class="sg-topbar">
 			<div class="container">
 				<div class="topbar-content">
