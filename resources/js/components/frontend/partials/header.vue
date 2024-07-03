@@ -4,7 +4,12 @@
 			<img :src="settings.top_bar_banner" alt="banner Image" />
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span class="mdi mdi-close mdi-15px" @click="topBanner"></span></button>
 		</div> -->
-		<p>changed details</p>
+		<div class="d-flex justify-content-center">
+			<p class="btn btn-danger"> btn1	</p>
+			<p class="btn btn-success"> btn2</p>
+			<p class="btn btn-info"> btn3</p>
+
+		</div>
 		<!-- <div class="sg-topbar">
 			<div class="container">
 				<div class="topbar-content">
