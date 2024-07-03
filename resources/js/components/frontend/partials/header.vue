@@ -6,8 +6,8 @@
 		</div> -->
 		<div class="d-flex justify-content-center">
 			<p class="btn btn-danger"> btn1	</p>
-			<p class="btn btn-success"> btn2</p>
-			<p class="btn btn-info"> btn3</p>
+			<!-- <p class="btn btn-success"> btn2</p>
+			<p class="btn btn-info"> btn3</p> -->
 
 		</div>
 		<!-- <div class="sg-topbar">
