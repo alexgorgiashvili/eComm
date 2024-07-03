@@ -4,10 +4,12 @@
 			<img :src="settings.top_bar_banner" alt="banner Image" />
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span class="mdi mdi-close mdi-15px" @click="topBanner"></span></button>
 		</div> -->
-		<div class="d-flex justify-content-center">
+		<div class="d-flex justify-content-between">
 			<p class="btn btn-danger"> btn1	</p>
-			<!-- <p class="btn btn-success"> btn2</p>
-			<p class="btn btn-info"> btn3</p> -->
+			<p class="btn btn-success"> btn2</p>
+			<p class="btn btn-info"> btn3</p>
+			<p class="btn btn-success"> btn4</p>
+			<p class="btn btn-info"> btn5</p>
 
 		</div>
 		<!-- <div class="sg-topbar">
