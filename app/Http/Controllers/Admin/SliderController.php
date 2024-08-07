@@ -64,6 +64,7 @@ class SliderController extends Controller
 
     public function edit($id, Request $request, LanguageInterface $language)
     {
+        // dd('ww');
         try {
             $data = [
                 'edit' => $this->slider->find($id),

@@ -434,7 +434,7 @@
 								<img :src="getUrl('public/images/others/shopping-bag.svg')" alt="shopping-bag" />
 							</router-link>
 						</li>
-						<li>
+						<!-- <li>
 							<div v-if="authUser">
 								<router-link v-if="authUser.user_type == 'customer'" :to="{ name: 'dashboard' }">
 									<img :src="getUrl('public/images/others/user.svg')" alt="User" />
@@ -447,7 +447,7 @@
 									<img :src="getUrl('public/images/others/user.svg')" alt="User" />
 								</router-link>
 							</div>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 			</div>

@@ -1337,10 +1337,11 @@ trait ImageTrait
                             $constraint->aspectRatio();
                         }, true)->resizeCanvas($width, $height, 'center', false, 'rgba(255, 255, 255, 0.00)')->save('public/'.$url, $this->getEncodePercentage(),'webp');
                     else:
-                        Image::make(public_path($image->original_file), $image->storage)->resize($width, $height,
-                            function ($constraint) {
-                                $constraint->aspectRatio();
-                            })->save('public/'.$url, $this->getEncodePercentage(),'jpg');
+                        Image::make(public_path($image->original_file))
+                        ->fit($width, $height, function ($constraint) {
+                            $constraint->upsize();
+                        })
+                        ->save('public/' . $url,  $this->getEncodePercentage(), 'jpg');
                     endif;
                 elseif ($image->storage == 'aws_s3'):
                     if (!$slider):
@@ -1424,6 +1425,8 @@ trait ImageTrait
         endif;
     }
 
+    
+    
     public function getImageArrayRecommendedSize($id, $widths = [], $heights = [])
     {
         foreach ($widths as $key => $width):
@@ -1441,9 +1444,9 @@ trait ImageTrait
     protected function getEncodePercentage(): int
     {
         if (settingHelper('image_optimization') && settingHelper('image_optimization') == 0):
-            $encode_percentage = settingHelper('image_optimization_percentage') ? : 90;
+            $encode_percentage = settingHelper('image_optimization_percentage') ? : 100;
         else:
-            $encode_percentage = 90;
+            $encode_percentage = 100;
         endif;
 
         return $encode_percentage;
